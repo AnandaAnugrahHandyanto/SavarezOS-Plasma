@@ -1,9 +1,14 @@
 name: Build SavarezOS
-on: [push]
+
+on:
+  push:
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
     container:
       image: debian:bookworm
       options: --privileged
@@ -32,11 +37,35 @@ jobs:
       - name: Build ISO
         run: lb build
 
-      - name: Compress ISO
-        run: zip -s 1500m SavarezOS-Alpha-v${{ github.run_number }}.zip *.iso
+      - name: Split ISO to ZIP
+        run: |
+          zip -s 1500m SavarezOS-Alpha-v${{ github.run_number }}.zip *.iso
 
-      - name: Upload ISO artifact
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: success()
+        with:
+          tag_name: SavarezOS-v${{ github.run_number }}
+          name: "SavarezOS Alpha v${{ github.run_number }}"
+          body: |
+            🚀 SavarezOS Alpha Build
+
+            Build: #${{ github.run_number }}
+            Commit: ${{ github.sha }}
+
+            📦 How to extract ISO:
+            - Download ALL .z* files
+            - Open .zip with 7-Zip / WinRAR
+            - Extract → ISO will merge automatically
+
+            Base: Debian 12 (Bookworm)
+            Desktop: KDE Plasma
+          files: SavarezOS-Alpha-v${{ github.run_number }}.z*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SavarezOS
+          name: SavarezOS-ISO
           path: "*.iso"
