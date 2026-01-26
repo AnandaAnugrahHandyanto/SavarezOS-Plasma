@@ -1,25 +1,32 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
-echo "SavarezOS" > /etc/hostname
+echo "[SavarezOS] Live hook start"
 
-cat <<EOF > /etc/sddm.conf.d/10-live.conf
+# Autologin SDDM (LIVE ONLY)
+mkdir -p /etc/sddm.conf.d
+cat > /etc/sddm.conf.d/autologin.conf <<EOF
 [Autologin]
-User=user
+User=live
 Session=plasma
 EOF
 
-mkdir -p /etc/xdg
-cat <<EOF > /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc
-[Containments][1]
-wallpaperplugin=org.kde.image
-[Containments][1][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/savarez/savarez-wallpaper.png
+# Live wallpaper
+mkdir -p /usr/share/wallpapers/SavarezOS
+cp /usr/share/savarez/savarez-wallpaper.png \
+   /usr/share/wallpapers/SavarezOS/background.png
+
+# Installer shortcut (live)
+cat > /home/live/Desktop/Install-SavarezOS.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=Install SavarezOS
+Exec=calamares
+Icon=system-installer
+Terminal=false
 EOF
 
-mkdir -p /etc/live/config.conf.d
-cat <<EOF > /etc/live/config.conf.d/savarez.conf
-LIVE_USERNAME="user"
-LIVE_USER_FULLNAME="SavarezOS Live User"
-LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
-EOF
+chmod +x /home/live/Desktop/Install-SavarezOS.desktop
+chown -R live:live /home/live/Desktop
+
+echo "[SavarezOS] Live hook done"
