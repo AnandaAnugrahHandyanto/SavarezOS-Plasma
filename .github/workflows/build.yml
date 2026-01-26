@@ -1,34 +1,78 @@
-name: Build SavarezOS Plasma ISO
-
-on:
-  push:
-    branches: [ main ]
-  workflow_dispatch:
+name: Build SavarezOS
+on: [push]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    container:
+      image: debian:bookworm
+      options: --privileged
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Install dependencies
         run: |
-          sudo apt update
-          sudo apt install -y \
-            live-build \
-            squashfs-tools \
-            xorriso \
-            grub-pc-bin \
-            grub-efi-amd64-bin
+          apt-get update
+          apt-get install -y live-build debootstrap squashfs-tools xorriso zip
 
       - name: Build ISO
         run: |
-          chmod +x build.sh
-          sudo ./build.sh
+          lb clean --purge
+          lb config noauto \
+              --architecture amd64 \
+              --distribution bookworm \
+              --binary-images iso-hybrid \
+              --archive-areas "main contrib non-free non-free-firmware"
+          lb build
 
-      - name: Upload ISO
+      - name: Compress and Split ISO for Release
+        run: |
+          zip -s 1500m SavarezOS-Alpha-v${{ github.run_number }}.zip *.iso
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        if: success()
+        with:
+          tag_name: SavarezOS-v${{ github.run_number }}
+          name: "SavarezOS Alpha v${{ github.run_number }}"
+          body: |
+            ## 🚀 SavarezOS Build Successful!
+                        
+            ### 🛠 Build Metadata
+            - **Build Number:** `${{ github.run_number }}`
+            - **Commit SHA:** `${{ github.sha }}`
+            - **Build Date:** $(date +'%Y-%m-%d %H:%M:%S')
+            - **Status:** `Stable Alpha`
+            
+            ### 🖥️ System Specifications
+            - **OS Name:** SavarezOS GNU/Linux
+            - **Base:** Debian 12 (Bookworm)
+            - **Desktop Environment:** KDE Plasma
+            - **Architecture:** x86_64 (amd64)
+            - **Hostname:** `SavarezOS`
+            
+            ### 📦 Important: How to Extract the ISO
+            GitHub has a 2GB file size limit for individual uploads. Therefore, the ISO has been split into multiple parts (`.zip`, `.z01`, etc.).
+            
+            **To reconstruct the original ISO:**
+            1. Download **ALL** files listed below.
+            2. Place them in the same folder.
+            3. Open the main **`.zip`** file using **7-Zip** or **WinRAR**.
+            4. Extract the content, and the tool will automatically merge the parts into one single `.iso` file.
+            
+            ---
+            *Built with ❤️ by SavarezOS Development Team*
+          files: "SavarezOS-Alpha-v${{ github.run_number }}.z*"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: SavarezOS-Plasma-ISO
+          name: SavarezOS
           path: "*.iso"
