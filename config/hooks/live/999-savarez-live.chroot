@@ -36,6 +36,5 @@ Terminal=false
 EOF
 
 chmod +x "$INSTALLER"
-chown -R $LIVE_USER:$LIVE_USER "$HOME_DIR"
 
 echo "[SavarezOS] Live hook done"
