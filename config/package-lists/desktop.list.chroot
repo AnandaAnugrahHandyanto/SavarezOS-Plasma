@@ -18,7 +18,3 @@ xserver-xorg-video-all
 xserver-xorg-input-all
 mesa-utils
 libgl1-mesa-dri
-
-grub-pc
-grub-efi-amd64
-os-prober
