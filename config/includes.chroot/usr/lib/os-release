@@ -1,0 +1,7 @@
+PRETTY_NAME="SavarezOS"
+NAME="SavarezOS"
+ID=savarezos
+VERSION_ID="beta"
+ID_LIKE=linux
+LOGO=savarez-logo
+HOME_URL="https://savarezos.org"

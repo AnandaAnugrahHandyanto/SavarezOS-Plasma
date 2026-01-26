@@ -1,0 +1,11 @@
+title-text: "SavarezOS"
+desktop-image: "background.png"
+
++ boot_menu {
+  left = 10%
+  top = 20%
+  width = 80%
+  height = 60%
+  item_color = "#ffffff"
+  selected_item_color = "#00ffff"
+}

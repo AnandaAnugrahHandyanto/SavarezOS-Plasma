@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+rm -f /etc/sddm.conf.d/10-live.conf
+
+mkdir -p /etc/X11/xorg.conf.d
+cat <<EOF > /etc/X11/xorg.conf.d/20-modesetting.conf
+Section "Device"
+    Identifier "Default"
+    Driver "modesetting"
+EndSection
+EOF

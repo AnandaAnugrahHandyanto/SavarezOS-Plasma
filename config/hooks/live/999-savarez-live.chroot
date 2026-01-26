@@ -1,0 +1,25 @@
+#!/bin/sh
+set -e
+
+echo "SavarezOS" > /etc/hostname
+
+cat <<EOF > /etc/sddm.conf.d/10-live.conf
+[Autologin]
+User=user
+Session=plasma
+EOF
+
+mkdir -p /etc/xdg
+cat <<EOF > /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc
+[Containments][1]
+wallpaperplugin=org.kde.image
+[Containments][1][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/savarez/savarez-wallpaper.png
+EOF
+
+mkdir -p /etc/live/config.conf.d
+cat <<EOF > /etc/live/config.conf.d/savarez.conf
+LIVE_USERNAME="user"
+LIVE_USER_FULLNAME="SavarezOS Live User"
+LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
+EOF
