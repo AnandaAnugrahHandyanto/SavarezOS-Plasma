@@ -3,21 +3,30 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-# Autologin SDDM (LIVE ONLY)
+LIVE_USER="user"
+HOME_DIR="/home/$LIVE_USER"
+DESKTOP="$HOME_DIR/Desktop"
+
+# Autologin SDDM
 mkdir -p /etc/sddm.conf.d
 cat > /etc/sddm.conf.d/autologin.conf <<EOF
 [Autologin]
-User=live
+User=$LIVE_USER
 Session=plasma
 EOF
 
 # Live wallpaper
 mkdir -p /usr/share/wallpapers/SavarezOS
-cp /usr/share/savarez/savarez-wallpaper.png \
-   /usr/share/wallpapers/SavarezOS/background.png
+if [ -f /usr/share/savarez/savarez-wallpaper.png ]; then
+  cp /usr/share/savarez/savarez-wallpaper.png \
+     /usr/share/wallpapers/SavarezOS/background.png
+fi
 
-# Installer shortcut (live)
-cat > /home/live/Desktop/Install-SavarezOS.desktop <<EOF
+mkdir -p "$DESKTOP"
+
+INSTALLER="$DESKTOP/Install-SavarezOS.desktop"
+
+cat > "$INSTALLER" <<EOF
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
@@ -26,7 +35,7 @@ Icon=system-installer
 Terminal=false
 EOF
 
-chmod +x /home/live/Desktop/Install-SavarezOS.desktop
-chown -R live:live /home/live/Desktop
+chmod +x "$INSTALLER"
+chown -R $LIVE_USER:$LIVE_USER "$HOME_DIR"
 
 echo "[SavarezOS] Live hook done"
