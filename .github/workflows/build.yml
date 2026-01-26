@@ -15,7 +15,7 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get update
-          apt-get install -y live-build debootstrap squashfs-tools xorriso debian-archive-keyring
+          apt-get install -y live-build debootstrap squashfs-tools xorriso debian-archive-keyring zip
 
       - name: Configure live-build
         run: |
