@@ -41,11 +41,6 @@ EOF
 mkdir -p /boot/grub/themes/SavarezOS
 cp -r /usr/share/grub/themes/SavarezOS/* /boot/grub/themes/SavarezOS/
 
-sed -i 's|^GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"|' \
-  /etc/default/grub || echo 'GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"' >> /etc/default/grub
-
-update-grub
-
 # Remove installer shortcut if exists
 rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
 
