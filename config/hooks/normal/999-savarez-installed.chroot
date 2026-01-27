@@ -32,8 +32,13 @@ cp /usr/share/savarez/savarez-wallpaper.png \
 # KDE default config
 mkdir -p /etc/xdg
 
-cp /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc \
-   /etc/xdg/
+SRC="/etc/xdg/plasma-org.kde.plasma.desktop-appletsrc"
+DST="/etc/xdg/plasma-org.kde.plasma.desktop-appletsrc"
+
+# Copy only if source != destination
+if [ "$(readlink -f "$SRC")" != "$(readlink -f "$DST")" ]; then
+    cp "$SRC" "$DST"
+fi
 
 # Marker
 touch /etc/savarez-installed
