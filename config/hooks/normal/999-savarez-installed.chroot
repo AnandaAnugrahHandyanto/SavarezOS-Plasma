@@ -4,7 +4,7 @@ set -e
 echo "[SavarezOS] Installed hook start"
 
 # OS Identity
-cat > /etc/os-release <<EOF
+cat > /usr/lib/os-release <<EOF
 NAME="SavarezOS"
 ID=savarezos
 PRETTY_NAME="SavarezOS Plasma"
@@ -14,7 +14,7 @@ HOME_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
 LOGO=savarez-logo
 EOF
 
-cp /etc/os-release /usr/lib/os-release
+ln -sf /usr/lib/os-release /etc/os-release
 
 echo "SavarezOS Beta" > /etc/debian_version
 echo "savarezos" > /etc/hostname
