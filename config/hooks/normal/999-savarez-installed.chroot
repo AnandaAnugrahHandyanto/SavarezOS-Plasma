@@ -3,7 +3,7 @@ set -e
 
 echo "[SavarezOS] Installed hook start"
 
-# OS Identity
+# OS identity
 cat > /usr/lib/os-release <<EOF
 NAME="SavarezOS"
 ID=savarezos
@@ -23,10 +23,11 @@ DISTRIB_RELEASE=Beta
 DISTRIB_DESCRIPTION="SavarezOS Plasma"
 EOF
 
+# Remove Debian identity
 echo "savarezos" > /etc/hostname
 echo "SavarezOS" > /etc/debian_version
 
-# Wallpaper
+# Wallpaper system
 mkdir -p /usr/share/wallpapers/SavarezOS
 
 cp /usr/share/savarez/savarez-wallpaper.png \
@@ -49,9 +50,8 @@ cat > /etc/neofetch/config.conf <<EOF
 ascii_distro="SavarezOS"
 EOF
 
-# GRUB
+# GRUB theme
 mkdir -p /boot/grub/themes/SavarezOS
-
 cp -r /usr/share/grub/themes/SavarezOS/* /boot/grub/themes/SavarezOS/
 
 # Marker

@@ -11,3 +11,6 @@ strings:
 
 images:
   productLogo: "logo.png"
+
+slideshow:
+  - "savarez-wallpaper.png"
