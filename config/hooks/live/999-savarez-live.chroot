@@ -3,23 +3,19 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-USER="user"
 WP="/usr/share/savarez/savarez-wallpaper.png"
-
 
 # Remove Debian installers
 rm -f /usr/share/applications/*debian*.desktop || true
 
-
-# Live user config
+# Live user
 cat > /etc/live/config.conf.d/99-savarez-user.conf <<EOF
 LIVE_USERNAME="user"
 LIVE_USER_FULLNAME="SavarezOS Live User"
 LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
 EOF
 
-
-# Default wallpaper for new users
+# Default wallpaper for all users
 mkdir -p /etc/skel/.config
 
 cat > /etc/skel/.config/plasma-org.kde.plasma.desktop-appletsrc <<EOF
@@ -28,7 +24,6 @@ wallpaperplugin=org.kde.image
 [Containments][1][Wallpaper][org.kde.image][General]
 Image=file://$WP
 EOF
-
 
 # Installer shortcut
 mkdir -p /etc/skel/Desktop
