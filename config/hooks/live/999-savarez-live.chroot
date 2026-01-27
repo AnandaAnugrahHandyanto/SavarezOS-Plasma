@@ -7,18 +7,17 @@ USER="user"
 HOME="/home/$USER"
 WP="/usr/share/savarez/savarez-wallpaper.png"
 
-# Remove Debian installer
-rm -f /usr/share/applications/debian-installer.desktop || true
-rm -f /usr/share/applications/install-debian.desktop || true
+# Remove Debian installers
+rm -f /usr/share/applications/*debian*.desktop || true
 
-# Force live user
+# Live user
 cat > /etc/live/config.conf.d/99-savarez-user.conf <<EOF
 LIVE_USERNAME="user"
 LIVE_USER_FULLNAME="SavarezOS Live User"
 LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
 EOF
 
-# KDE wallpaper (config)
+# Wallpaper config
 mkdir -p "$HOME/.config"
 
 cat > "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" <<EOF
@@ -29,9 +28,6 @@ Image=file://$WP
 EOF
 
 chown -R $USER:$USER "$HOME/.config"
-
-# Force wallpaper runtime
-sudo -u $USER plasma-apply-wallpaperimage "$WP" || true
 
 # Installer shortcut
 mkdir -p "$HOME/Desktop"
@@ -48,9 +44,6 @@ EOF
 chmod +x "$HOME/Desktop/Install-SavarezOS.desktop"
 chown -R $USER:$USER "$HOME/Desktop"
 
-# Refresh icons
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
 echo "[SavarezOS] Live hook done"
-
-chmod +x config/hooks/live/999-savarez-live.chroot

@@ -1,22 +1,13 @@
 #!/bin/bash
-# SavarezOS Session Init
 
-USER_HOME="$HOME"
 WP="/usr/share/savarez/savarez-wallpaper.png"
 
-# KDE wallpaper (Live + Installed)
-if [ -f "$WP" ]; then
-    mkdir -p "$USER_HOME/.config"
-
-    cat > "$USER_HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" <<EOF
-[Containments][1]
-wallpaperplugin=org.kde.image
-[Containments][1][Wallpaper][org.kde.image][General]
-Image=file://$WP
-EOF
+# Apply wallpaper on login
+if command -v plasma-apply-wallpaperimage >/dev/null; then
+    plasma-apply-wallpaperimage "$WP" || true
 fi
 
-# Remove installer shortcut after install
+# Remove installer icon after install
 if [ -f /etc/savarez-installed ]; then
-    rm -f "$USER_HOME/Desktop/Install-SavarezOS.desktop" 2>/dev/null
+    rm -f "$HOME/Desktop/Install-SavarezOS.desktop" 2>/dev/null
 fi
