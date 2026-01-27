@@ -4,35 +4,36 @@ set -e
 echo "[SavarezOS] Live hook start"
 
 USER="user"
-HOME="/home/$USER"
 WP="/usr/share/savarez/savarez-wallpaper.png"
+
 
 # Remove Debian installers
 rm -f /usr/share/applications/*debian*.desktop || true
 
-# Live user
+
+# Live user config
 cat > /etc/live/config.conf.d/99-savarez-user.conf <<EOF
 LIVE_USERNAME="user"
 LIVE_USER_FULLNAME="SavarezOS Live User"
 LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
 EOF
 
-# Wallpaper config
-mkdir -p "$HOME/.config"
 
-cat > "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" <<EOF
+# Default wallpaper for new users
+mkdir -p /etc/skel/.config
+
+cat > /etc/skel/.config/plasma-org.kde.plasma.desktop-appletsrc <<EOF
 [Containments][1]
 wallpaperplugin=org.kde.image
 [Containments][1][Wallpaper][org.kde.image][General]
 Image=file://$WP
 EOF
 
-chown -R $USER:$USER "$HOME/.config"
 
 # Installer shortcut
-mkdir -p "$HOME/Desktop"
+mkdir -p /etc/skel/Desktop
 
-cat > "$HOME/Desktop/Install-SavarezOS.desktop" <<EOF
+cat > /etc/skel/Desktop/Install-SavarezOS.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
@@ -41,8 +42,7 @@ Icon=/usr/share/savarez/savarez-logo.png
 Terminal=false
 EOF
 
-chmod +x "$HOME/Desktop/Install-SavarezOS.desktop"
-chown -R $USER:$USER "$HOME/Desktop"
+chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
 
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 

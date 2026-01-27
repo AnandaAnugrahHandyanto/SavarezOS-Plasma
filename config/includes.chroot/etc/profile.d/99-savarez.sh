@@ -7,7 +7,6 @@ if command -v plasma-apply-wallpaperimage >/dev/null; then
     plasma-apply-wallpaperimage "$WP" || true
 fi
 
-# Remove installer icon after install
 if [ -f /etc/savarez-installed ]; then
     rm -f "$HOME/Desktop/Install-SavarezOS.desktop" 2>/dev/null
 fi
