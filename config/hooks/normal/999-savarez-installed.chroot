@@ -60,3 +60,6 @@ gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 echo "[SavarezOS] Installed hook done"
 
 chmod +x config/hooks/normal/999-savarez-installed.chroot
+
+echo "[SavarezOS] Installed hook done"
+touch /etc/savarez-installed
