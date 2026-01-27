@@ -3,7 +3,9 @@ set -e
 
 echo "[SavarezOS] Fix X11 keyboard path"
 
+# Create only if missing
 mkdir -p /etc/X11/xorg.conf.d
-chmod 755 /etc/X11/xorg.conf.d
 
-chmod +x config/hooks/normal/997-fix-x11.chroot
+chmod 755 /etc/X11/xorg.conf.d || true
+
+exit 0
