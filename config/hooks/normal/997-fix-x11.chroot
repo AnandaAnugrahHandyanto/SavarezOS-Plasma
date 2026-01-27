@@ -1,0 +1,9 @@
+#!/bin/bash
+set -e
+
+echo "[SavarezOS] Fix X11 keyboard path"
+
+mkdir -p /etc/X11/xorg.conf.d
+chmod 755 /etc/X11/xorg.conf.d
+
+chmod +x config/hooks/normal/997-fix-x11.chroot

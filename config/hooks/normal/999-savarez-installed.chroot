@@ -16,7 +16,7 @@ EOF
 
 ln -sf /usr/lib/os-release /etc/os-release
 
-echo "SavarezOS Beta" > /etc/debian_version
+echo "SavarezOS" > /etc/debian_version
 echo "savarezos" > /etc/hostname
 
 # Wallpaper global
@@ -44,5 +44,12 @@ rm -f /usr/local/bin/savarez-branding.sh
 
 # Remove installer
 rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
+
+# Force installed wallpaper
+if command -v plasma-apply-wallpaperimage >/dev/null; then
+  plasma-apply-wallpaperimage /usr/share/wallpapers/SavarezOS/background.png || true
+fi
+
+gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
 echo "[SavarezOS] Installed hook done"

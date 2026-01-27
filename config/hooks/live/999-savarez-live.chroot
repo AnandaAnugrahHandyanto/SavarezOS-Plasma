@@ -58,6 +58,9 @@ chown -R \$USER:\$USER "\$HOME/.config"
 # Installer shortcut (live only)
 mkdir -p "\$HOME/Desktop"
 
+rm -f /usr/share/applications/debian-installer.desktop || true
+rm -f /usr/share/applications/install-debian.desktop || true
+
 cat > "\$HOME/Desktop/Install-SavarezOS.desktop" <<EOD
 [Desktop Entry]
 Type=Application
@@ -73,7 +76,12 @@ EOF
 
 chmod +x /usr/local/bin/savarez-branding.sh
 
+gtk-update-icon-cache -f /usr/share/icons/hicolor || true
+
 # Enable service
 systemctl enable savarez-branding.service
 
 echo "[SavarezOS] Live hook done"
+
+# Force wallpaper runtime
+sudo -u $USER plasma-apply-wallpaperimage "$WP" || true
