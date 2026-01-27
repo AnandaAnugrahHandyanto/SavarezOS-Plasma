@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=SavarezOS
+Type=Service
+X-KDE-ServiceTypes=Plasma/LayoutTemplate
+X-KDE-PluginInfo-Name=savarezos
+X-KDE-PluginInfo-Author=SavarezOS
+X-KDE-PluginInfo-Version=1.0

@@ -37,9 +37,10 @@ cat > /etc/skel/Desktop/Install-SavarezOS.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
-Exec=calamares
+Exec=pkexec calamares
 Icon=/usr/share/savarez/savarez-logo.png
 Terminal=false
+Categories=System;
 EOF
 
 chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop

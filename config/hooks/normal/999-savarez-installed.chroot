@@ -16,9 +16,18 @@ EOF
 
 ln -sf /usr/lib/os-release /etc/os-release
 
+# Remove Debian identity
+rm -f /etc/lsb-release
+rm -f /etc/debian_version
+
+cat > /etc/lsb-release <<EOF
+DISTRIB_ID=SavarezOS
+DISTRIB_RELEASE=Beta
+DISTRIB_DESCRIPTION="SavarezOS Plasma"
+EOF
+
 echo "SavarezOS" > /etc/debian_version
 echo "savarezos" > /etc/hostname
-
 
 # WALLPAPER
 mkdir -p /usr/share/wallpapers/SavarezOS
@@ -37,7 +46,6 @@ wallpaperplugin=org.kde.image
 Image=file:///usr/share/wallpapers/SavarezOS/background.png
 EOF
 
-
 # NEOFETCH
 mkdir -p /etc/neofetch
 
@@ -45,12 +53,14 @@ cat > /etc/neofetch/config.conf <<EOF
 ascii_distro="SavarezOS"
 EOF
 
-
 # GRUB
 mkdir -p /boot/grub/themes/SavarezOS
 
 cp -r /usr/share/grub/themes/SavarezOS/* /boot/grub/themes/SavarezOS/
 
+# Apply Plasma layout
+mkdir -p /etc/xdg
+echo "savarezos" > /etc/xdg/plasma-default-layout
 
 # Marker
 touch /etc/savarez-installed
