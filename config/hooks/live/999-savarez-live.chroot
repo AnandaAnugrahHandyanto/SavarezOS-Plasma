@@ -4,84 +4,53 @@ set -e
 echo "[SavarezOS] Live hook start"
 
 USER="user"
+HOME="/home/$USER"
 WP="/usr/share/savarez/savarez-wallpaper.png"
 
-# Lock live user
-cat > /etc/live/config.conf.d/99-savarez.conf <<EOF
+# Remove Debian installer
+rm -f /usr/share/applications/debian-installer.desktop || true
+rm -f /usr/share/applications/install-debian.desktop || true
+
+# Force live user
+cat > /etc/live/config.conf.d/99-savarez-user.conf <<EOF
 LIVE_USERNAME="user"
 LIVE_USER_FULLNAME="SavarezOS Live User"
 LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
 EOF
 
-# Create systemd branding service (runtime)
-mkdir -p /etc/systemd/system
+# KDE wallpaper (config)
+mkdir -p "$HOME/.config"
 
-cat > /etc/systemd/system/savarez-branding.service <<EOF
-[Unit]
-Description=SavarezOS Branding Service
-After=graphical.target
-
-[Service]
-Type=oneshot
-ExecStart=/usr/local/bin/savarez-branding.sh
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Branding script
-mkdir -p /usr/local/bin
-
-cat > /usr/local/bin/savarez-branding.sh <<EOF
-#!/bin/bash
-
-USER="user"
-HOME="/home/\$USER"
-WP="$WP"
-
-# Wait home
-while [ ! -d "\$HOME" ]; do sleep 1; done
-
-# Wallpaper KDE
-mkdir -p "\$HOME/.config"
-
-cat > "\$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" <<EOC
+cat > "$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" <<EOF
 [Containments][1]
 wallpaperplugin=org.kde.image
 [Containments][1][Wallpaper][org.kde.image][General]
 Image=file://$WP
-EOC
+EOF
 
-chown -R \$USER:\$USER "\$HOME/.config"
+chown -R $USER:$USER "$HOME/.config"
 
-# Installer shortcut (live only)
-mkdir -p "\$HOME/Desktop"
+# Force wallpaper runtime
+sudo -u $USER plasma-apply-wallpaperimage "$WP" || true
 
-rm -f /usr/share/applications/debian-installer.desktop || true
-rm -f /usr/share/applications/install-debian.desktop || true
+# Installer shortcut
+mkdir -p "$HOME/Desktop"
 
-cat > "\$HOME/Desktop/Install-SavarezOS.desktop" <<EOD
+cat > "$HOME/Desktop/Install-SavarezOS.desktop" <<EOF
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
 Exec=calamares
 Icon=/usr/share/savarez/savarez-logo.png
 Terminal=false
-EOD
-
-chmod +x "\$HOME/Desktop/Install-SavarezOS.desktop"
-chown -R \$USER:\$USER "\$HOME/Desktop"
 EOF
 
-chmod +x /usr/local/bin/savarez-branding.sh
+chmod +x "$HOME/Desktop/Install-SavarezOS.desktop"
+chown -R $USER:$USER "$HOME/Desktop"
 
+# Refresh icons
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
-
-# Enable service
-systemctl enable savarez-branding.service
 
 echo "[SavarezOS] Live hook done"
 
-# Force wallpaper runtime
-sudo -u $USER plasma-apply-wallpaperimage "$WP" || true
+chmod +x config/hooks/live/999-savarez-live.chroot

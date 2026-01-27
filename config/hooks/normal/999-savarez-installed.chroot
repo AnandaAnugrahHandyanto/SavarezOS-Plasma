@@ -3,7 +3,7 @@ set -e
 
 echo "[SavarezOS] Installed hook start"
 
-# OS Identity
+# OS Identity (lock branding)
 cat > /usr/lib/os-release <<EOF
 NAME="SavarezOS"
 ID=savarezos
@@ -16,16 +16,18 @@ EOF
 
 ln -sf /usr/lib/os-release /etc/os-release
 
+# Remove Debian version
 echo "SavarezOS" > /etc/debian_version
 echo "savarezos" > /etc/hostname
 
-# Wallpaper global
+# System wallpaper
 mkdir -p /usr/share/wallpapers/SavarezOS
 cp /usr/share/savarez/savarez-wallpaper.png \
- /usr/share/wallpapers/SavarezOS/background.png
+   /usr/share/wallpapers/SavarezOS/background.png
 
-# KDE default
+# KDE default wallpaper
 mkdir -p /etc/xdg
+
 cat > /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc <<EOF
 [Containments][1]
 wallpaperplugin=org.kde.image
@@ -33,23 +35,28 @@ wallpaperplugin=org.kde.image
 Image=file:///usr/share/wallpapers/SavarezOS/background.png
 EOF
 
-# Neofetch
-cat > /etc/neofetch/config.conf <<EOF
-ascii_distro="SavarezOS"
-EOF
-
-# Disable branding service (only live)
-systemctl disable savarez-branding.service || true
-rm -f /usr/local/bin/savarez-branding.sh
-
-# Remove installer
-rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
-
-# Force installed wallpaper
+# Force wallpaper
 if command -v plasma-apply-wallpaperimage >/dev/null; then
   plasma-apply-wallpaperimage /usr/share/wallpapers/SavarezOS/background.png || true
 fi
 
+# Neofetch branding
+mkdir -p /etc/neofetch
+
+cat > /etc/neofetch/config.conf <<EOF
+ascii_distro="SavarezOS"
+EOF
+
+# GRUB theme
+mkdir -p /boot/grub/themes/SavarezOS
+cp -r /usr/share/grub/themes/SavarezOS/* /boot/grub/themes/SavarezOS/
+
+# Remove installer shortcut
+rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
+
+# Refresh icons
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
 echo "[SavarezOS] Installed hook done"
+
+chmod +x config/hooks/normal/999-savarez-installed.chroot
