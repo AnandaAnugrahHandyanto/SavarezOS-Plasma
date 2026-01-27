@@ -1,7 +1,7 @@
-PRETTY_NAME="SavarezOS"
 NAME="SavarezOS"
+PRETTY_NAME="SavarezOS Plasma"
 ID=savarezos
+VERSION="Beta"
 VERSION_ID="beta"
-ID_LIKE=linux
+HOME_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
 LOGO=savarez-logo
-HOME_URL="https://savarezos.org"

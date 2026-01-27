@@ -1,5 +1,4 @@
 componentName: savarezos
-welcomeStyleCalamares: true
 
 strings:
   productName: SavarezOS
@@ -14,3 +13,8 @@ images:
 
 slideshow:
   - "savarez-wallpaper.png"
+
+style:
+  sidebarBackground: "#0f172a"
+  sidebarText: "#ffffff"
+  sidebarTextHighlight: "#38bdf8"

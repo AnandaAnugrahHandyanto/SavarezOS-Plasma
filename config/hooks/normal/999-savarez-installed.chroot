@@ -6,12 +6,12 @@ echo "[SavarezOS] Installed hook start"
 # OS identity
 cat > /usr/lib/os-release <<EOF
 NAME="SavarezOS"
-ID=savarezos
 PRETTY_NAME="SavarezOS Plasma"
+ID=savarezos
 VERSION="Beta"
 VERSION_ID="beta"
-HOME_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
 LOGO=savarez-logo
+HOME_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
 EOF
 
 ln -sf /usr/lib/os-release /etc/os-release
@@ -23,36 +23,17 @@ DISTRIB_RELEASE=Beta
 DISTRIB_DESCRIPTION="SavarezOS Plasma"
 EOF
 
-# Remove Debian identity
-echo "savarezos" > /etc/hostname
-echo "SavarezOS" > /etc/debian_version
-
-# Wallpaper system
+# Wallpaper
 mkdir -p /usr/share/wallpapers/SavarezOS
 
 cp /usr/share/savarez/savarez-wallpaper.png \
    /usr/share/wallpapers/SavarezOS/background.png
 
-# KDE default
+# KDE default config
 mkdir -p /etc/xdg
 
-cat > /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc <<EOF
-[Containments][1]
-wallpaperplugin=org.kde.image
-[Containments][1][Wallpaper][org.kde.image][General]
-Image=file:///usr/share/wallpapers/SavarezOS/background.png
-EOF
-
-# Neofetch
-mkdir -p /etc/neofetch
-
-cat > /etc/neofetch/config.conf <<EOF
-ascii_distro="SavarezOS"
-EOF
-
-# GRUB theme
-mkdir -p /boot/grub/themes/SavarezOS
-cp -r /usr/share/grub/themes/SavarezOS/* /boot/grub/themes/SavarezOS/
+cp /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc \
+   /etc/xdg/
 
 # Marker
 touch /etc/savarez-installed

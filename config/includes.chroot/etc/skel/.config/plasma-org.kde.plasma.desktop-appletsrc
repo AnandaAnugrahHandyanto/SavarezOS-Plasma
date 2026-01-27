@@ -1,0 +1,10 @@
+[Containments][1]
+activityId=
+formfactor=0
+immutability=1
+location=0
+plugin=org.kde.desktopcontainment
+
+[Containments][1][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/savarez/savarez-wallpaper.png
+FillMode=2
