@@ -3,38 +3,77 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-LIVE_USER="user"
-HOME_DIR="/home/$LIVE_USER"
-DESKTOP="$HOME_DIR/Desktop"
+USER="user"
+WP="/usr/share/savarez/savarez-wallpaper.png"
 
-# Autologin SDDM
-mkdir -p /etc/sddm.conf.d
-cat > /etc/sddm.conf.d/autologin.conf <<EOF
-[Autologin]
-User=$LIVE_USER
-Session=plasma
+# Lock live user
+cat > /etc/live/config.conf.d/99-savarez.conf <<EOF
+LIVE_USERNAME="user"
+LIVE_USER_FULLNAME="SavarezOS Live User"
+LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
 EOF
 
-# Live wallpaper
-mkdir -p /usr/share/wallpapers/SavarezOS
-if [ -f /usr/share/savarez/savarez-wallpaper.png ]; then
-  cp /usr/share/savarez/savarez-wallpaper.png \
-     /usr/share/wallpapers/SavarezOS/background.png
-fi
+# Create systemd branding service (runtime)
+mkdir -p /etc/systemd/system
 
-mkdir -p "$DESKTOP"
+cat > /etc/systemd/system/savarez-branding.service <<EOF
+[Unit]
+Description=SavarezOS Branding Service
+After=graphical.target
 
-INSTALLER="$DESKTOP/Install-SavarezOS.desktop"
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/savarez-branding.sh
+RemainAfterExit=yes
 
-cat > "$INSTALLER" <<EOF
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Branding script
+mkdir -p /usr/local/bin
+
+cat > /usr/local/bin/savarez-branding.sh <<EOF
+#!/bin/bash
+
+USER="user"
+HOME="/home/\$USER"
+WP="$WP"
+
+# Wait home
+while [ ! -d "\$HOME" ]; do sleep 1; done
+
+# Wallpaper KDE
+mkdir -p "\$HOME/.config"
+
+cat > "\$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc" <<EOC
+[Containments][1]
+wallpaperplugin=org.kde.image
+[Containments][1][Wallpaper][org.kde.image][General]
+Image=file://$WP
+EOC
+
+chown -R \$USER:\$USER "\$HOME/.config"
+
+# Installer shortcut (live only)
+mkdir -p "\$HOME/Desktop"
+
+cat > "\$HOME/Desktop/Install-SavarezOS.desktop" <<EOD
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
 Exec=calamares
-Icon=system-installer
+Icon=/usr/share/savarez/savarez-logo.png
 Terminal=false
+EOD
+
+chmod +x "\$HOME/Desktop/Install-SavarezOS.desktop"
+chown -R \$USER:\$USER "\$HOME/Desktop"
 EOF
 
-chmod +x "$INSTALLER"
+chmod +x /usr/local/bin/savarez-branding.sh
+
+# Enable service
+systemctl enable savarez-branding.service
 
 echo "[SavarezOS] Live hook done"

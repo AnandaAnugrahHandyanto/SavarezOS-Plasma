@@ -1,0 +1,13 @@
+componentName: savarezos
+welcomeStyleCalamares: true
+
+strings:
+  productName: SavarezOS
+  shortProductName: SavarezOS
+  version: Beta
+  shortVersion: Beta
+  welcomeTitle: "Welcome to SavarezOS Installer"
+  welcomeMessage: "Install SavarezOS Plasma on your computer."
+
+images:
+  productLogo: "logo.png"

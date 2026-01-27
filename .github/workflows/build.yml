@@ -24,13 +24,14 @@ jobs:
 
       - name: Configure live-build
         run: |
-          lb clean --purge
+          lb clean --purge || true
+          rm -rf .build cache chroot binary auto || true
           lb config \
             --mode debian \
             --distribution bookworm \
             --architectures amd64 \
             --binary-images iso-hybrid \
-            --debian-installer live \
+            --debian-installer false \
             --archive-areas "main contrib non-free non-free-firmware" \
             --bootappend-live "boot=live components splash quiet"
 

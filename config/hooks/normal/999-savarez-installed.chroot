@@ -3,45 +3,46 @@ set -e
 
 echo "[SavarezOS] Installed hook start"
 
-# Fix OS identity
+# OS Identity
 cat > /etc/os-release <<EOF
 NAME="SavarezOS"
 ID=savarezos
 PRETTY_NAME="SavarezOS Plasma"
 VERSION="Beta"
-VERSION_ID=beta
-HOME_URL="https://github.com/AnandaAnugrahHandyanto"
+VERSION_ID="beta"
+HOME_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
+LOGO=savarez-logo
 EOF
 
-# Wallpaper installed system
+cp /etc/os-release /usr/lib/os-release
+
+echo "SavarezOS Beta" > /etc/debian_version
+echo "savarezos" > /etc/hostname
+
+# Wallpaper global
 mkdir -p /usr/share/wallpapers/SavarezOS
 cp /usr/share/savarez/savarez-wallpaper.png \
-   /usr/share/wallpapers/SavarezOS/background.png
+ /usr/share/wallpapers/SavarezOS/background.png
+
+# KDE default
+mkdir -p /etc/xdg
+cat > /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc <<EOF
+[Containments][1]
+wallpaperplugin=org.kde.image
+[Containments][1][Wallpaper][org.kde.image][General]
+Image=file:///usr/share/wallpapers/SavarezOS/background.png
+EOF
 
 # Neofetch
-mkdir -p /etc/neofetch
-cp /etc/neofetch/config.conf /etc/neofetch/config.conf.bak || true
-
 cat > /etc/neofetch/config.conf <<EOF
-print_info() {
-  info title
-  info underline
-  info "OS" "SavarezOS Plasma"
-  info "Kernel" kernel
-  info "DE" de
-  info "WM" wm
-  info "Terminal" term
-  info "CPU" cpu
-  info "Memory" memory
-}
 ascii_distro="SavarezOS"
 EOF
 
-# GRUB branding
-mkdir -p /boot/grub/themes/SavarezOS
-cp -r /usr/share/grub/themes/SavarezOS/* /boot/grub/themes/SavarezOS/
+# Disable branding service (only live)
+systemctl disable savarez-branding.service || true
+rm -f /usr/local/bin/savarez-branding.sh
 
-# Remove installer shortcut if exists
+# Remove installer
 rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
 
 echo "[SavarezOS] Installed hook done"
