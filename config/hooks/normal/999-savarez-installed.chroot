@@ -23,6 +23,13 @@ DISTRIB_RELEASE=Beta
 DISTRIB_DESCRIPTION="SavarezOS Plasma"
 EOF
 
+# Remove Debian branding
+rm -rf /usr/share/debian
+rm -rf /usr/share/doc/debian
+rm -rf /etc/debian_version
+
+echo "SavarezOS" > /etc/debian_version
+
 # Wallpaper
 mkdir -p /usr/share/wallpapers/SavarezOS
 
@@ -44,5 +51,15 @@ fi
 touch /etc/savarez-installed
 
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
+
+# Hostname
+echo "savarezos" > /etc/hostname
+
+cat > /etc/hosts <<EOF
+127.0.0.1 localhost
+127.0.1.1 savarezos
+
+::1 localhost ip6-localhost ip6-loopback
+EOF
 
 echo "[SavarezOS] Installed hook done"
