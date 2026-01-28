@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=Savarez Wallpaper
+Exec=plasma-apply-wallpaperimage /usr/share/savarez/savarez-wallpaper.png
+X-KDE-autostart-phase=1

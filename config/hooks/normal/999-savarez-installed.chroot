@@ -36,6 +36,12 @@ mkdir -p /usr/share/wallpapers/SavarezOS
 cp /usr/share/savarez/savarez-wallpaper.png \
    /usr/share/wallpapers/SavarezOS/background.png
 
+# Plasma look and feel
+lookandfeeltool -a org.savarezos.desktop || true
+
+# KDE about branding
+rm -rf /usr/share/kcm_about-distro
+
 # KDE default config
 mkdir -p /etc/xdg
 

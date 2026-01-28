@@ -1,0 +1,8 @@
+[Plymouth Theme]
+Name=SavarezOS
+Description=SavarezOS Boot Splash
+ModuleName=script
+
+[script]
+ImageDir=/usr/share/plymouth/themes/savarezos
+ScriptFile=/usr/share/plymouth/themes/savarezos/savarezos.script
