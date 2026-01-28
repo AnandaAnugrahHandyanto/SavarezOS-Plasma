@@ -1,7 +1,10 @@
 [Desktop Entry]
 Name=SavarezOS
 Comment=SavarezOS Plasma Desktop
+Type=Service
+X-KDE-ServiceTypes=Plasma/Branding
 X-KDE-PluginInfo-Name=savarezos
+X-KDE-PluginInfo-Author=SavarezOS Team
 X-KDE-PluginInfo-Version=1.0
-X-KDE-PluginInfo-Author=SavarezOS
+X-KDE-PluginInfo-Website=https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma
 X-KDE-PluginInfo-License=GPL
