@@ -42,9 +42,16 @@ lookandfeeltool -a org.savarezos.desktop || true
 # KDE about branding
 rm -rf /usr/share/kcm_about-distro
 
+# Reset Calamares cache
+rm -rf /var/cache/calamares || true
+
 # KDE default config
 mkdir -p /etc/xdg
 
+cat > /etc/xdg/kcm_about-distrorc <<EOF
+[General]
+Branding=savarezos
+EOF
 SRC="/etc/xdg/plasma-org.kde.plasma.desktop-appletsrc"
 DST="/etc/xdg/plasma-org.kde.plasma.desktop-appletsrc"
 

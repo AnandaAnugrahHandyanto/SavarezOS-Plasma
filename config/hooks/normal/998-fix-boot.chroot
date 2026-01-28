@@ -18,3 +18,7 @@ fi
 
 # Plymouth branding
 plymouth-set-default-theme savarezos -R || true
+
+# Remove Debian Calamares configs
+rm -rf /etc/calamares/settings-debian.conf || true
+rm -rf /etc/calamares/modules/debian-* || true
