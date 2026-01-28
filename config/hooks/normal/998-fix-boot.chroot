@@ -1,18 +1,21 @@
 #!/bin/bash
 set -e
 
+apt-get update
+
+apt-get install -y \
+  grub-efi-amd64-bin \
+  grub-common \
+  grub-pc-bin \
+  binutils \
+  os-prober
+
 systemctl enable sddm
 systemctl set-default graphical.target
 
-apt-get install -y \
-  xserver-xorg-video-all \
-  mesa-utils \
-  libgl1-mesa-dri
-
-# Activate GRUB theme
+# Set GRUB theme
 if [ -f /etc/default/grub ]; then
-  sed -i 's|^#*GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"|' \
-    /etc/default/grub
+  sed -i 's|^#*GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"|' /etc/default/grub
   update-grub || true
 fi
 

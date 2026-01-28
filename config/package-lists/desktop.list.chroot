@@ -18,3 +18,11 @@ xserver-xorg-video-all
 xserver-xorg-input-all
 mesa-utils
 libgl1-mesa-dri
+
+# Bootloader essentials
+grub-efi-amd64-bin
+grub-common
+grub-pc-bin
+binutils
+os-prober
+
