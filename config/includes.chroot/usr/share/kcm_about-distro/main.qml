@@ -24,7 +24,15 @@ Kirigami.Page {
         }
 
         Kirigami.Label {
-            text: "Based on Debian"
+            text: "Distribution: SavarezOS"
+        }
+
+        Kirigami.Label {
+            text: "Base: Independent Linux"
+        }
+
+        Kirigami.Label {
+            text: "Website:"
         }
 
         Kirigami.Label {
