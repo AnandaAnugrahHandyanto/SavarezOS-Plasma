@@ -6,8 +6,8 @@ echo "[SavarezOS] Installed hook start"
 # OS identity
 cat > /usr/lib/os-release <<EOF
 NAME="SavarezOS"
-PRETTY_NAME="SavarezOS Plasma"
 ID=savarezos
+PRETTY_NAME="SavarezOS Plasma"
 VERSION="Beta"
 VERSION_ID="beta"
 LOGO=savarez-logo
@@ -23,53 +23,31 @@ DISTRIB_RELEASE=Beta
 DISTRIB_DESCRIPTION="SavarezOS Plasma"
 EOF
 
-# Remove Debian branding
-rm -rf /usr/share/debian
-rm -rf /usr/share/doc/debian
-rm -rf /etc/debian_version
+# REMOVE Debian About System
+rm -rf /usr/share/kcm_about-distro/debian
+rm -rf /usr/lib/os-release.d
+rm -rf /usr/share/plasma/branding/debian
 
-echo "SavarezOS" > /etc/debian_version
-
-# Wallpaper
-mkdir -p /usr/share/wallpapers/SavarezOS
-
-cp /usr/share/savarez/savarez-wallpaper.png \
-   /usr/share/wallpapers/SavarezOS/background.png
-
-# KDE about branding
-rm -rf /usr/share/kcm_about-distro
-
-# Reset Calamares cache
-rm -rf /var/cache/calamares || true
-
-# KDE default config
+# Force KDE branding
 mkdir -p /etc/xdg
-
 cat > /etc/xdg/kcm_about-distrorc <<EOF
 [General]
 Branding=savarezos
+Name=SavarezOS
+Logo=/usr/share/icons/hicolor/scalable/apps/savarez-logo.png
+Website=https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma
+Version=Beta
+Variant=Plasma
 EOF
-SRC="/etc/xdg/plasma-org.kde.plasma.desktop-appletsrc"
-DST="/etc/xdg/plasma-org.kde.plasma.desktop-appletsrc"
 
-# Copy only if source != destination
-if [ "$(readlink -f "$SRC")" != "$(readlink -f "$DST")" ]; then
-    cp "$SRC" "$DST"
-fi
+# Wallpaper
+mkdir -p /usr/share/wallpapers/SavarezOS
+cp /usr/share/savarez/savarez-wallpaper.png \
+   /usr/share/wallpapers/SavarezOS/background.png
 
 # Marker
 touch /etc/savarez-installed
 
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
-
-# Hostname
-echo "savarezos" > /etc/hostname
-
-cat > /etc/hosts <<EOF
-127.0.0.1 localhost
-127.0.1.1 savarezos
-
-::1 localhost ip6-localhost ip6-loopback
-EOF
 
 echo "[SavarezOS] Installed hook done"

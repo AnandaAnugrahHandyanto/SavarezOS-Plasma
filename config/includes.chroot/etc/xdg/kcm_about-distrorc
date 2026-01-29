@@ -1,2 +1,7 @@
 [General]
 Branding=savarezos
+Name=SavarezOS
+Logo=/usr/share/icons/hicolor/scalable/apps/savarez-logo.png
+Website=https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma
+Version=Beta
+Variant=Plasma

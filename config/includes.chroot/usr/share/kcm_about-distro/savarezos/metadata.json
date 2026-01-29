@@ -1,0 +1,10 @@
+{
+  "KPlugin": {
+    "Id": "savarezos",
+    "Name": "SavarezOS",
+    "Description": "SavarezOS Plasma Edition",
+    "Version": "Beta",
+    "Website": "https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma",
+    "Icon": "savarez-logo"
+  }
+}

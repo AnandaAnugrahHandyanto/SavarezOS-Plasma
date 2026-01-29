@@ -1,27 +1,10 @@
 #!/bin/bash
 set -e
 
-apt-get update
-
-apt-get install -y \
-  grub-efi-amd64-bin \
-  grub-common \
-  grub-pc-bin \
-  binutils \
-  os-prober
-
 systemctl enable sddm
 systemctl set-default graphical.target
 
 # Set GRUB theme
 if [ -f /etc/default/grub ]; then
   sed -i 's|^#*GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"|' /etc/default/grub
-  update-grub || true
 fi
-
-# Plymouth branding
-plymouth-set-default-theme savarezos -R || true
-
-# Remove Debian Calamares configs
-rm -rf /etc/calamares/settings-debian.conf || true
-rm -rf /etc/calamares/modules/debian-* || true
