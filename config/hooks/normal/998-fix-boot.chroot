@@ -8,3 +8,5 @@ systemctl set-default graphical.target
 if [ -f /etc/default/grub ]; then
   sed -i 's|^#*GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"|' /etc/default/grub
 fi
+
+plymouth-set-default-theme savarezos -R || true

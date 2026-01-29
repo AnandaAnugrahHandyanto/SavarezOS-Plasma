@@ -6,7 +6,7 @@ Kirigami.Page {
 
     Column {
         anchors.centerIn: parent
-        spacing: 20
+        spacing: 18
 
         Image {
             source: "/usr/share/icons/hicolor/scalable/apps/savarez-logo.png"
@@ -20,23 +20,19 @@ Kirigami.Page {
         }
 
         Kirigami.Label {
-            text: "Version: Beta"
+            text: "Version: 1.0 Beta"
         }
 
         Kirigami.Label {
-            text: "Distribution: SavarezOS"
+            text: "Independent Linux Distribution"
         }
 
         Kirigami.Label {
-            text: "Base: Independent Linux"
+            text: "Built by SavarezOS Project"
         }
 
         Kirigami.Label {
-            text: "Website:"
-        }
-
-        Kirigami.Label {
-            text: "https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
+            text: "https://savarezos.org"
         }
     }
 }

@@ -1,7 +1,10 @@
 NAME="SavarezOS"
 ID=savarezos
+ID_LIKE=linux
 PRETTY_NAME="SavarezOS Plasma"
 VERSION="Beta"
-VERSION_ID="beta"
+VERSION_ID="1.0"
 LOGO=savarez-logo
-HOME_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
+HOME_URL="https://savarezos.org"
+SUPPORT_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
+BUG_REPORT_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma/issues"
