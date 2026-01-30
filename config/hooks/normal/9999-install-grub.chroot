@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+
+echo "Installing GRUB into target system..."
+
+apt-get update
+
+apt-get install -y \
+  grub-pc \
+  grub-efi-amd64 \
+  grub-common \
+  efibootmgr \
+  os-prober
+
+exit 0
