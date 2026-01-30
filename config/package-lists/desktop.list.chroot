@@ -20,9 +20,7 @@ mesa-utils
 libgl1-mesa-dri
 
 # Bootloader essentials
-grub-efi-amd64-bin
+grub-efi-amd64
+grub-pc
 grub-common
-grub-pc-bin
-binutils
 os-prober
-
