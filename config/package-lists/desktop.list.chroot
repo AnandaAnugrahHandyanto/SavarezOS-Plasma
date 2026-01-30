@@ -20,7 +20,8 @@ mesa-utils
 libgl1-mesa-dri
 
 # Bootloader essentials
-grub-efi-amd64
-grub-pc
 grub-common
 os-prober
+efibootmgr
+parted
+dosfstools
