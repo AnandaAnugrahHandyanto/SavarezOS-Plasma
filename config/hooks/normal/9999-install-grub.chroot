@@ -1,15 +1,17 @@
 #!/bin/bash
 set -e
 
-echo "Installing GRUB into target system..."
+echo "[SavarezOS] Installing GRUB (auto detect firmware)..."
 
 apt-get update
 
-apt-get install -y \
-  grub-pc \
-  grub-efi-amd64 \
-  grub-common \
-  efibootmgr \
-  os-prober
+# Detect EFI
+if [ -d /sys/firmware/efi ]; then
+    echo "[SavarezOS] UEFI detected"
+    apt-get install -y grub-efi-amd64 grub-common efibootmgr os-prober
+else
+    echo "[SavarezOS] BIOS detected"
+    apt-get install -y grub-pc grub-common os-prober
+fi
 
 exit 0
