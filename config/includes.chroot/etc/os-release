@@ -1,0 +1,7 @@
+NAME="SavarezOS"
+VERSION="Rolling"
+ID=savarez
+ID_LIKE=debian
+PRETTY_NAME="SavarezOS"
+VERSION_ID="rolling"
+HOME_URL="https://github.com/AnandaAnugrahHandyanto"
