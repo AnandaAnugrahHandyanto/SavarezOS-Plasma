@@ -1,0 +1,5 @@
+grub-efi-amd64
+grub-pc
+grub-common
+efibootmgr
+os-prober
