@@ -1,37 +1,13 @@
 #!/bin/bash
 set -e
 
-echo "[SavarezOS] Installing GRUB (final EFI fix)..."
+echo "[SavarezOS] Preparing GRUB environment"
 
 apt-get update
 
-# Install common first
-apt-get install -y grub-common efibootmgr os-prober
-
-# Detect EFI
-if [ -d /sys/firmware/efi ]; then
-    echo "[SavarezOS] UEFI detected"
-
-    apt-get install -y grub-efi-amd64
-
-    # Create EFI dir if missing
-    mkdir -p /boot/efi/EFI/savarezos
-
-    # Force generate EFI binary
-    grub-install \
-      --target=x86_64-efi \
-      --efi-directory=/boot/efi \
-      --bootloader-id=SavarezOS \
-      --recheck
-
-else
-    echo "[SavarezOS] BIOS detected"
-
-    apt-get install -y grub-pc
-
-    grub-install --target=i386-pc --recheck /dev/sda
-fi
-
-update-grub
+apt-get install -y \
+  grub-common \
+  efibootmgr \
+  os-prober
 
 exit 0
