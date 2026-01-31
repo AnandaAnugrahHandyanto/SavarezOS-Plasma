@@ -20,7 +20,6 @@ mesa-utils
 libgl1-mesa-dri
 
 # Bootloader essentials
-grub-common
 os-prober
 efibootmgr
 parted
