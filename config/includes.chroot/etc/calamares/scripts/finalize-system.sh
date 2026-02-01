@@ -37,4 +37,12 @@ fi
 
 update-grub
 
+# Ensure GRUB is default boot (safe)
+if command -v efibootmgr >/dev/null 2>&1; then
+    BOOTNUM=$(efibootmgr | grep SavarezOS | head -n1 | awk '{print $1}' | tr -d '*Boot')
+    if [ -n "$BOOTNUM" ]; then
+        efibootmgr -o "$BOOTNUM" || true
+    fi
+fi
+
 echo "[SavarezOS] Finalization complete."

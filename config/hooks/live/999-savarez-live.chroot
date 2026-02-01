@@ -31,4 +31,18 @@ fi
 
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
+# Create installer shortcut on live desktop
+cat > /etc/skel/Desktop/Install-SavarezOS.desktop <<EOF
+[Desktop Entry]
+Name=Install SavarezOS
+Comment=Install SavarezOS to disk
+Exec=sudo calamares
+Icon=system-installer
+Terminal=false
+Type=Application
+Categories=System;
+EOF
+
+chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
+
 echo "[SavarezOS] Live hook done"
