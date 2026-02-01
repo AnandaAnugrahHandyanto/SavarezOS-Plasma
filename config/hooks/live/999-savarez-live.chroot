@@ -19,30 +19,24 @@ mkdir -p /etc/skel/.config
 
 # Copy wallpaper config
 cp /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc \
-   /etc/skel/.config/
+   /etc/skel/.config/ || true
 
-# Copy installer shortcut (if exists)
-if [ -f /usr/share/applications/install-savarezos.desktop ]; then
-    echo "[SavarezOS] Installer shortcut found"
-    cp /usr/share/applications/install-savarezos.desktop /etc/skel/Desktop/
-else
-    echo "[SavarezOS] Installer shortcut not found, skipping"
-fi
-
-gtk-update-icon-cache -f /usr/share/icons/hicolor || true
-
-# Create installer shortcut on live desktop
+# Create installer shortcut (ONE source of truth)
 cat > /etc/skel/Desktop/Install-SavarezOS.desktop <<EOF
 [Desktop Entry]
+Type=Application
 Name=Install SavarezOS
-Comment=Install SavarezOS to disk
-Exec=sudo calamares
+Comment=Install SavarezOS to Disk
+Exec=pkexec calamares
 Icon=system-installer
 Terminal=false
-Type=Application
-Categories=System;
+Categories=System;Installer;
 EOF
 
 chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
+
+# Refresh desktop cache
+update-desktop-database /usr/share/applications || true
+gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
 echo "[SavarezOS] Live hook done"

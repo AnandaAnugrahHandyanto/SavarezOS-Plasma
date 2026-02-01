@@ -18,7 +18,10 @@ fi
 
 echo "[SavarezOS] EFI partition: $EFI_PART"
 
-mount "$EFI_PART" "$ESP"
+mount "$EFI_PART" "$ESP" || true
+mount --bind /dev  "$TARGET/dev"
+mount --bind /proc "$TARGET/proc"
+mount --bind /sys  "$TARGET/sys"
 
 # Install packages
 chroot "$TARGET" apt-get update
@@ -52,7 +55,7 @@ fi
 
 # Force boot order
 chroot "$TARGET" bash -c '
-ID=$(efibootmgr | grep SavarezOS | head -n1 | sed "s/Boot//;s/*//")
+ID=$(efibootmgr | grep "SavarezOS" | awk '{print $1}' | sed 's/Boot//;s/\*//')
 [ -n "$ID" ] && efibootmgr -o $ID
 '
 

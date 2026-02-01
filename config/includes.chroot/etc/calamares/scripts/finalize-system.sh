@@ -3,9 +3,9 @@ set -e
 
 echo "[SavarezOS] Finalizing system..."
 
-# Remove installer shortcut
-rm -f /home/*/Desktop/Install*.desktop
-rm -f /etc/skel/Desktop/Install*.desktop
+# Remove installer shortcut after install
+rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
+rm -f /etc/skel/Desktop/Install-SavarezOS.desktop || true
 
 # Set SDDM theme
 mkdir -p /etc/sddm.conf.d
