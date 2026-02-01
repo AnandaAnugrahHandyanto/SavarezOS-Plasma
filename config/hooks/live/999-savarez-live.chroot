@@ -21,9 +21,13 @@ mkdir -p /etc/skel/.config
 cp /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc \
    /etc/skel/.config/
 
-# Copy installer shortcut
-cp /usr/share/applications/install-savarezos.desktop \
-   /etc/skel/Desktop/
+# Copy installer shortcut (if exists)
+if [ -f /usr/share/applications/install-savarezos.desktop ]; then
+    echo "[SavarezOS] Installer shortcut found"
+    cp /usr/share/applications/install-savarezos.desktop /etc/skel/Desktop/
+else
+    echo "[SavarezOS] Installer shortcut not found, skipping"
+fi
 
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
