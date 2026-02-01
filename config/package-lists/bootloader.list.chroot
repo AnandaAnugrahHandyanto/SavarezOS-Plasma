@@ -1,3 +1,4 @@
-grub-common
+grub-efi-amd64
+shim-signed
 efibootmgr
 os-prober
