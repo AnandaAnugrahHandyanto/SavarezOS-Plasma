@@ -45,4 +45,21 @@ if command -v efibootmgr >/dev/null 2>&1; then
     fi
 fi
 
+# systemd-boot compatibility
+if [ -d /boot/loader ]; then
+  mkdir -p /boot/efi/EFI/Linux
+
+  if [ -f /boot/efi/EFI/SavarezOS/grubx64.efi ]; then
+    cp /boot/efi/EFI/SavarezOS/grubx64.efi \
+       /boot/efi/EFI/Linux/savarezos.efi
+  fi
+
+  mkdir -p /boot/loader/entries
+
+  cat <<EOF > /boot/loader/entries/savarezos.conf
+title   SavarezOS
+efi     /EFI/Linux/savarezos.efi
+EOF
+fi
+
 echo "[SavarezOS] Finalization complete."
