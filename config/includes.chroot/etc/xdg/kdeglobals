@@ -1,5 +1,4 @@
 [General]
+Name=SavarezOS
 ColorScheme=BreezeDark
-
-[KDE]
-LookAndFeelPackage=org.kde.breeze.desktop
+Logo=/usr/share/pixmaps/savarez-logo.png
