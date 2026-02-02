@@ -4,61 +4,68 @@ set -e
 echo "[SavarezOS] Finalizing system..."
 
 # Remove installer shortcut
-rm -f /home/*/Desktop/Install*.desktop || true
-rm -f /etc/skel/Desktop/Install*.desktop || true
+rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
+rm -f /etc/skel/Desktop/Install-SavarezOS.desktop || true
+rm -f /usr/share/applications/install-savarezos.desktop || true
 
-# SDDM Theme
+# SDDM
 mkdir -p /etc/sddm.conf.d
 
-cat <<EOF >/etc/sddm.conf.d/10-savarez.conf
+cat > /etc/sddm.conf.d/10-savarez.conf <<EOF
 [Theme]
 Current=savarez
 EOF
 
-# GRUB Theme
-sed -i 's|^#GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/savarez/theme.txt"|' /etc/default/grub
+# GRUB THEME
+sed -i 's|^#GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/savarez/theme.txt"|' \
+  /etc/default/grub || true
 
 mkdir -p /boot/grub/themes/savarez
 
-cat <<EOF >/boot/grub/themes/savarez/theme.txt
+cat > /boot/grub/themes/savarez/theme.txt <<EOF
 title-text: ""
 desktop-image: "background.png"
 EOF
 
 [ -f /usr/share/backgrounds/savarez/grub.png ] && \
-cp /usr/share/backgrounds/savarez/grub.png /boot/grub/themes/savarez/background.png
+cp /usr/share/backgrounds/savarez/grub.png \
+   /boot/grub/themes/savarez/background.png || true
 
 update-grub || true
 
-# EFI Setup
+# BOOT ENTRY
 ESP="/boot/efi"
 
-mkdir -p $ESP/EFI/Linux
+mkdir -p "$ESP/EFI/Linux"
 mkdir -p /boot/loader/entries
 
-# Copy GRUB EFI
-if [ -f $ESP/EFI/SavarezOS/grubx64.efi ]; then
-  cp $ESP/EFI/SavarezOS/grubx64.efi \
-     $ESP/EFI/Linux/savarezos.efi
+# Copy GRUB EFI (rEFInd + fallback)
+if [ -f "$ESP/EFI/SavarezOS/grubx64.efi" ]; then
+  cp "$ESP/EFI/SavarezOS/grubx64.efi" \
+     "$ESP/EFI/Linux/savarezos.efi"
 fi
 
-# Detect Kernel
-VMLINUX=$(ls /boot/vmlinuz-* | head -n1)
-INITRD=$(ls /boot/initrd.img-* | head -n1)
-ROOTUUID=$(blkid -s UUID -o value $(findmnt -n -o SOURCE /))
+# Detect kernel (relative paths for sd-boot)
+VMLINUX_REL=$(basename $(ls /boot/vmlinuz-* | head -n1))
+INITRD_REL=$(basename $(ls /boot/initrd.img-* | head -n1))
 
-# Create systemd-boot Entry
-cat <<EOF >/boot/loader/entries/savarezos.conf
+ROOTUUID=$(blkid -s UUID -o value \
+  $(findmnt -n -o SOURCE /))
+
+# systemd-boot entry
+cat > /boot/loader/entries/savarezos.conf <<EOF
 title   SavarezOS GNU/Linux
-linux   $VMLINUX
-initrd  $INITRD
+linux   /$VMLINUX_REL
+initrd  /$INITRD_REL
 options root=UUID=$ROOTUUID rw quiet splash
 EOF
 
-# Set Boot Priority
+# EFI boot priority
 if command -v efibootmgr >/dev/null; then
-  ID=$(efibootmgr | grep SavarezOS | head -n1 | sed 's/Boot//;s/\*//')
-  [ -n "$ID" ] && efibootmgr -o $ID || true
+  ID=$(efibootmgr | grep SavarezOS | head -n1 | \
+       sed 's/Boot//;s/\*//')
+
+  [ -n "$ID" ] && efibootmgr -o "$ID" || true
 fi
 
 sync
