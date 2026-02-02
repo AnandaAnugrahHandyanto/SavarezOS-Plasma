@@ -25,3 +25,10 @@ os-prober
 efibootmgr
 parted
 dosfstools
+
+qml-module-qtquick-controls2
+qml-module-qtgraphicaleffects
+qml-module-qtquick-layouts
+qml-module-qtquick-window2
+qml-module-org-kde-kirigami2
+qml-module-org-kde-kirigami

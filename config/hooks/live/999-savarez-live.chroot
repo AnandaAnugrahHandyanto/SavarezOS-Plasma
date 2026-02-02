@@ -3,28 +3,26 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-# Remove Debian installers
-rm -f /usr/share/applications/*debian*.desktop
-rm -f /usr/share/applications/*installer*.desktop
+# Remove Debian installer only
+rm -f /usr/share/applications/*debian*.desktop || true
 
-# Detect live user dynamically
+# Detect live user
 LIVEUSER=$(ls /home | head -n1)
 
-# Prepare desktop dirs
+# Prepare dirs
 mkdir -p /etc/skel/Desktop
 
 [ -n "$LIVEUSER" ] && mkdir -p /home/$LIVEUSER/Desktop || true
 
-# Create installer shortcut
+# Create installer
 cat > /usr/share/applications/install-savarezos.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
-Comment=Install SavarezOS to Disk
 Exec=pkexec calamares
 Icon=system-installer
 Terminal=false
-Categories=System;Installer;
+Categories=System;
 EOF
 
 chmod 755 /usr/share/applications/install-savarezos.desktop

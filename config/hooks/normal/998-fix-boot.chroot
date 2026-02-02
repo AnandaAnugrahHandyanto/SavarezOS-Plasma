@@ -4,9 +4,25 @@ set -e
 systemctl enable sddm
 systemctl set-default graphical.target
 
-# Set GRUB theme
-if [ -f /etc/default/grub ]; then
-  sed -i 's|^#*GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"|' /etc/default/grub
+# Plymouth
+plymouth-set-default-theme savarezos -R || true
+
+# Force mount EFI
+EFI_PART=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | cut -d' ' -f1 | head -n1)
+
+if [ -n "$EFI_PART" ]; then
+  mkdir -p /boot/efi
+  mount "$EFI_PART" /boot/efi || true
 fi
 
-plymouth-set-default-theme savarezos -R || true
+# Install GRUB
+if mountpoint -q /boot/efi; then
+
+  grub-install \
+    --target=x86_64-efi \
+    --efi-directory=/boot/efi \
+    --bootloader-id=SavarezOS \
+    --recheck || true
+
+  update-grub || true
+fi
