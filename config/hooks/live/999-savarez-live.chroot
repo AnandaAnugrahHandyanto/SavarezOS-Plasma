@@ -3,6 +3,9 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
+# Remove Debian installers
+rm -f /usr/share/applications/*debian*.desktop || true
+
 # Force live user
 cat > /etc/live/config.conf.d/99-savarez-user.conf <<EOF
 LIVE_USERNAME="user"
@@ -10,29 +13,28 @@ LIVE_USER_FULLNAME="SavarezOS Live User"
 LIVE_USER_DEFAULT_GROUPS="sudo audio video cdrom plugdev netdev"
 EOF
 
-# Create desktop dir for live user
-mkdir -p /home/user/Desktop
+# Ensure skel dirs
+mkdir -p /etc/skel/Desktop
+mkdir -p /etc/skel/.config
 
-# Create installer shortcut directly in live home
-cat > /home/user/Desktop/Install-SavarezOS.desktop <<EOF
+# Copy wallpaper config
+cp /etc/xdg/plasma-org.kde.plasma.desktop-appletsrc \
+   /etc/skel/.config/ || true
+
+# Create installer shortcut on live desktop
+cat > /etc/skel/Desktop/Install-SavarezOS.desktop <<EOF
 [Desktop Entry]
-Type=Application
 Name=Install SavarezOS
 Comment=Install SavarezOS to Disk
 Exec=pkexec calamares
 Icon=system-installer
 Terminal=false
-Categories=System;Installer;
+Type=Application
+Categories=System;
 EOF
 
-chmod +x /home/user/Desktop/Install-SavarezOS.desktop
-chown user:user /home/user/Desktop/Install-SavarezOS.desktop
+chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
 
-# Remove Debian leftovers
-rm -f /usr/share/applications/*debian*.desktop || true
-
-# Refresh KDE cache
-update-desktop-database /usr/share/applications || true
 gtk-update-icon-cache -f /usr/share/icons/hicolor || true
 
 echo "[SavarezOS] Live hook done"
