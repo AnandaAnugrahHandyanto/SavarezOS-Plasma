@@ -5,19 +5,17 @@ echo "[SavarezOS] Finalizing system..."
 
 # Ensure EFI mounted
 if ! mountpoint -q /boot/efi; then
-  EFI_PART=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | cut -d' ' -f1 | head -n1)
+  EFI_PART=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | head -n1)
 
-  if [ -n "$EFI_PART" ]; then
-    mount "$EFI_PART" /boot/efi || true
-  fi
+  [ -n "$EFI_PART" ] && mount "$EFI_PART" /boot/efi || true
 fi
 
-# Remove installer shortcut
+# Remove installer
 rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
 rm -f /etc/skel/Desktop/Install-SavarezOS.desktop || true
 rm -f /usr/share/applications/install-savarezos.desktop || true
 
-# SDDM
+# SDDM Theme
 mkdir -p /etc/sddm.conf.d
 
 cat > /etc/sddm.conf.d/10-savarez.conf <<EOF
@@ -25,7 +23,7 @@ cat > /etc/sddm.conf.d/10-savarez.conf <<EOF
 Current=savarez
 EOF
 
-# GRUB THEME
+# GRUB Theme
 sed -i 's|^#GRUB_THEME=.*|GRUB_THEME="/boot/grub/themes/savarez/theme.txt"|' \
   /etc/default/grub || true
 
@@ -42,40 +40,27 @@ cp /usr/share/backgrounds/savarez/grub.png \
 
 update-grub || true
 
-# systemd-boot entry
-mkdir -p /boot/loader/entries
-
-VMLINUX=$(ls /boot/vmlinuz-* | sort -V | tail -n1)
-INITRD=$(ls /boot/initrd.img-* | sort -V | tail -n1)
-
-VMLINUX_REL="/$(basename "$VMLINUX")"
-INITRD_REL="/$(basename "$INITRD")"
-
-ROOTUUID=$(blkid -s UUID -o value $(findmnt -n -o SOURCE /))
-
-cat > /boot/loader/entries/savarezos.conf <<EOF
-title   SavarezOS GNU/Linux
-linux   $VMLINUX_REL
-initrd  $INITRD_REL
-options root=UUID=$ROOTUUID rw quiet splash
-EOF
-
-# Register in UEFI (safe)
+# Register GRUB in UEFI
 if command -v efibootmgr >/dev/null; then
 
   DISK="/dev/$(lsblk -no PKNAME $(findmnt -n -o SOURCE /) | head -n1)"
-  PART="$(lsblk -no PARTNUM $(findmnt -n -o SOURCE /) | head -n1)"
 
-  if [ -n "$DISK" ] && [ -n "$PART" ]; then
-    efibootmgr -c \
-      -d "$DISK" \
-      -p "$PART" \
-      -L "SavarezOS" \
-      -l '\EFI\SavarezOS\grubx64.efi' || true
-  fi
+  [ -n "$DISK" ] && efibootmgr -c \
+    -d "$DISK" \
+    -p 1 \
+    -L "SavarezOS" \
+    -l '\EFI\SavarezOS\grubx64.efi' || true
 fi
 
-# rEFInd scan
+# systemd-boot: Chainload GRUB
+mkdir -p /boot/loader/entries
+
+cat > /boot/loader/entries/savarezos.conf <<EOF
+title   SavarezOS
+efi     /EFI/SavarezOS/grubx64.efi
+EOF
+
+# rEFInd Fallback
 ESP="/boot/efi"
 
 mkdir -p "$ESP/EFI/Linux"
