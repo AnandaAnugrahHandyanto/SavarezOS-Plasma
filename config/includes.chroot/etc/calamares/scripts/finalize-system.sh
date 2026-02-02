@@ -33,39 +33,32 @@ cp /usr/share/backgrounds/savarez/grub.png \
 
 update-grub || true
 
-# BOOT ENTRY
-ESP="/boot/efi"
-
-mkdir -p "$ESP/EFI/Linux"
+# systemd-boot entry
 mkdir -p /boot/loader/entries
 
-# Copy GRUB EFI (rEFInd + fallback)
-if [ -f "$ESP/EFI/SavarezOS/grubx64.efi" ]; then
-  cp "$ESP/EFI/SavarezOS/grubx64.efi" \
-     "$ESP/EFI/Linux/savarezos.efi"
-fi
+VMLINUX=$(ls /boot/vmlinuz-* | sort -V | tail -n1)
+INITRD=$(ls /boot/initrd.img-* | sort -V | tail -n1)
 
-# Detect kernel (relative paths for sd-boot)
-VMLINUX_REL=$(basename $(ls /boot/vmlinuz-* | head -n1))
-INITRD_REL=$(basename $(ls /boot/initrd.img-* | head -n1))
+VMLINUX_REL="/$(basename "$VMLINUX")"
+INITRD_REL="/$(basename "$INITRD")"
 
-ROOTUUID=$(blkid -s UUID -o value \
-  $(findmnt -n -o SOURCE /))
+ROOTUUID=$(blkid -s UUID -o value $(findmnt -n -o SOURCE /))
 
-# systemd-boot entry
 cat > /boot/loader/entries/savarezos.conf <<EOF
 title   SavarezOS GNU/Linux
-linux   /$VMLINUX_REL
-initrd  /$INITRD_REL
+linux   $VMLINUX_REL
+initrd  $INITRD_REL
 options root=UUID=$ROOTUUID rw quiet splash
 EOF
 
-# EFI boot priority
-if command -v efibootmgr >/dev/null; then
-  ID=$(efibootmgr | grep SavarezOS | head -n1 | \
-       sed 's/Boot//;s/\*//')
+# rEFInd scan
+ESP="/boot/efi"
 
-  [ -n "$ID" ] && efibootmgr -o "$ID" || true
+mkdir -p "$ESP/EFI/Linux"
+
+if [ -f "$ESP/EFI/SavarezOS/grubx64.efi" ]; then
+  cp "$ESP/EFI/SavarezOS/grubx64.efi" \
+     "$ESP/EFI/Linux/savarezos.efi"
 fi
 
 sync

@@ -3,6 +3,10 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
+# Remove Debian installers
+rm -f /usr/share/applications/*debian*.desktop
+rm -f /usr/share/applications/*installer*.desktop
+
 # Detect live user dynamically
 LIVEUSER=$(ls /home | head -n1)
 

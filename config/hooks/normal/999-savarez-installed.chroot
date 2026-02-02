@@ -7,7 +7,7 @@ echo "[SavarezOS] Installed hook start"
 cat > /usr/lib/os-release <<EOF
 NAME="SavarezOS"
 ID=savarezos
-PRETTY_NAME="SavarezOS Plasma"
+PRETTY_NAME="SavarezOS GNU/Linux"
 VERSION="Beta"
 VERSION_ID="beta"
 LOGO=savarez-logo
