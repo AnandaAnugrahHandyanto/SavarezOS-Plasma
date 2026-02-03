@@ -1,28 +1,28 @@
 #!/bin/bash
 set -e
 
-systemctl enable sddm
-systemctl set-default graphical.target
+echo "[SavarezOS] Forcing EFI + GRUB install"
 
-# Plymouth
-plymouth-set-default-theme savarezos -R || true
-
-# Force mount EFI
+# Find EFI partition
 EFI_PART=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | cut -d' ' -f1 | head -n1)
 
-if [ -n "$EFI_PART" ]; then
-  mkdir -p /boot/efi
-  mount "$EFI_PART" /boot/efi || true
+if [ -z "$EFI_PART" ]; then
+  echo "[ERROR] No EFI partition"
+  exit 0
 fi
 
-# Install GRUB
-if mountpoint -q /boot/efi; then
+mkdir -p /boot/efi
+mount "$EFI_PART" /boot/efi || true
 
-  grub-install \
-    --target=x86_64-efi \
-    --efi-directory=/boot/efi \
-    --bootloader-id=SavarezOS \
-    --recheck || true
+# Install GRUB anyway
+grub-install \
+  --target=x86_64-efi \
+  --efi-directory=/boot/efi \
+  --bootloader-id=SavarezOS \
+  --recheck || true
 
-  update-grub || true
-fi
+update-grub || true
+
+sync
+
+echo "[SavarezOS] GRUB forced install done"
