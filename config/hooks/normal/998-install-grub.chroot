@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e
+
+echo "[SavarezOS] Installing GRUB"
+
+mountpoint -q /boot/efi || exit 0
+
+apt install -y grub-efi-amd64 efibootmgr
+
+grub-install \
+ --target=x86_64-efi \
+ --efi-directory=/boot/efi \
+ --bootloader-id=SavarezOS \
+ --recheck
+
+update-grub
