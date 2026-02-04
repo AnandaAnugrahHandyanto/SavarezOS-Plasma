@@ -1,44 +1,48 @@
 #!/bin/bash
 set -e
 
-echo "[SavarezOS] Installing GRUB (force mode)"
+echo "[SavarezOS] Installing GRUB (UEFI)"
 
 TARGET="/target"
+ESP="$TARGET/boot/efi"
 
-# Detect EFI partition
+# Find EFI partition
 EFI_PART=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | cut -d' ' -f1 | head -n1)
 
 if [ -z "$EFI_PART" ]; then
-  echo "[ERROR] No EFI partition"
+  echo "[ERROR] EFI partition not found"
   exit 1
 fi
 
-# Mount ESP into target
-mkdir -p "$TARGET/boot/efi"
-mount "$EFI_PART" "$TARGET/boot/efi"
+echo "[SavarezOS] EFI: $EFI_PART"
 
-# Bind system
+# Mount ESP
+mkdir -p "$ESP"
+mount "$EFI_PART" "$ESP"
+
+# Bind mounts
 mount --bind /dev  "$TARGET/dev"
 mount --bind /proc "$TARGET/proc"
 mount --bind /sys  "$TARGET/sys"
 
-# Install grub inside target
+# Install GRUB inside target
 chroot "$TARGET" grub-install \
   --target=x86_64-efi \
   --efi-directory=/boot/efi \
   --bootloader-id=SavarezOS \
   --recheck
 
+# Generate config
 chroot "$TARGET" update-grub
 
-# Fallback loader
-mkdir -p "$TARGET/boot/efi/EFI/BOOT"
+# Fallback loader (UEFI safe)
+mkdir -p "$ESP/EFI/BOOT"
 
-if [ -f "$TARGET/boot/efi/EFI/SavarezOS/grubx64.efi" ]; then
-  cp "$TARGET/boot/efi/EFI/SavarezOS/grubx64.efi" \
-     "$TARGET/boot/efi/EFI/BOOT/BOOTX64.EFI"
+if [ -f "$ESP/EFI/SavarezOS/grubx64.efi" ]; then
+  cp "$ESP/EFI/SavarezOS/grubx64.efi" \
+     "$ESP/EFI/BOOT/BOOTX64.EFI"
 fi
 
 sync
 
-echo "[SavarezOS] GRUB install done"
+echo "[SavarezOS] GRUB installed successfully"

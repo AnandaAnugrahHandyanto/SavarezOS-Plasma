@@ -7,11 +7,11 @@ echo "[SavarezOS] Live hook start"
 rm -f /usr/share/applications/*debian*.desktop || true
 rm -f /usr/share/applications/*installer*.desktop || true
 
-# Prepare skeleton desktop
+# Force create desktop folder
 mkdir -p /etc/skel/Desktop
 
-# Create installer launcher
-cat > /usr/share/applications/install-savarezos.desktop <<EOF
+# Installer launcher
+cat > /etc/skel/Desktop/Install-SavarezOS.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
@@ -22,13 +22,11 @@ Terminal=false
 Categories=System;Installer;
 EOF
 
-chmod 755 /usr/share/applications/install-savarezos.desktop
-
-# Copy to skeleton (for future live user)
-cp /usr/share/applications/install-savarezos.desktop \
-   /etc/skel/Desktop/Install-SavarezOS.desktop
-
 chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
+
+# Also put in /usr/share (menu)
+cp /etc/skel/Desktop/Install-SavarezOS.desktop \
+   /usr/share/applications/install-savarezos.desktop
 
 update-desktop-database || true
 
