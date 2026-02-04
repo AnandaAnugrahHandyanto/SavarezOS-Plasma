@@ -1,9 +1,6 @@
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
-Comment=Install SavarezOS to disk
 Exec=pkexec calamares
-Icon=/usr/share/savarez/savarez-logo.png
+Icon=system-installer
 Terminal=false
-Categories=System;Installer;
-StartupNotify=true

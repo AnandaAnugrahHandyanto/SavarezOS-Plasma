@@ -1,0 +1,5 @@
+LB_BINARY_FILESYSTEM="fat32"
+LB_ISO_APPLICATION="SavarezOS Live"
+LB_ISO_PUBLISHER="SavarezOS Project"
+LB_ISO_VOLUME="SAVAREZOS_2026"
+LB_BOOTAPPEND_LIVE="boot=live components quiet splash username=user"

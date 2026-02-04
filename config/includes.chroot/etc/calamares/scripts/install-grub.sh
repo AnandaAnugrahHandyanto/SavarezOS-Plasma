@@ -1,48 +1,34 @@
 #!/bin/bash
 set -e
 
-echo "[SavarezOS] Installing GRUB (UEFI)"
-
 TARGET="/target"
 ESP="$TARGET/boot/efi"
 
-# Find EFI partition
+mkdir -p "$ESP"
+
 EFI_PART=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | cut -d' ' -f1 | head -n1)
 
-if [ -z "$EFI_PART" ]; then
-  echo "[ERROR] EFI partition not found"
-  exit 1
-fi
+[ -z "$EFI_PART" ] && exit 1
 
-echo "[SavarezOS] EFI: $EFI_PART"
-
-# Mount ESP
-mkdir -p "$ESP"
 mount "$EFI_PART" "$ESP"
 
-# Bind mounts
-mount --bind /dev  "$TARGET/dev"
-mount --bind /proc "$TARGET/proc"
-mount --bind /sys  "$TARGET/sys"
+for d in dev proc sys; do
+  mount --bind /$d "$TARGET/$d"
+done
 
-# Install GRUB inside target
+chroot "$TARGET" apt install -y grub-efi-amd64 efibootmgr
+
 chroot "$TARGET" grub-install \
-  --target=x86_64-efi \
-  --efi-directory=/boot/efi \
-  --bootloader-id=SavarezOS \
-  --recheck
+ --target=x86_64-efi \
+ --efi-directory=/boot/efi \
+ --bootloader-id=SavarezOS
 
-# Generate config
 chroot "$TARGET" update-grub
 
-# Fallback loader (UEFI safe)
+# Fallback
 mkdir -p "$ESP/EFI/BOOT"
 
-if [ -f "$ESP/EFI/SavarezOS/grubx64.efi" ]; then
-  cp "$ESP/EFI/SavarezOS/grubx64.efi" \
-     "$ESP/EFI/BOOT/BOOTX64.EFI"
-fi
+cp "$ESP/EFI/SavarezOS/grubx64.efi" \
+   "$ESP/EFI/BOOT/BOOTX64.EFI"
 
 sync
-
-echo "[SavarezOS] GRUB installed successfully"
