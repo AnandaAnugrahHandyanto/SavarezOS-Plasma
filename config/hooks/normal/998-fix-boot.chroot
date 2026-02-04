@@ -1,28 +1,34 @@
 #!/bin/bash
 set -e
 
-echo "[SavarezOS] Forcing EFI + GRUB install"
+echo "[SavarezOS] Fix bootloader"
 
-# Find EFI partition
-EFI_PART=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | cut -d' ' -f1 | head -n1)
+systemctl enable sddm
+systemctl set-default graphical.target
 
-if [ -z "$EFI_PART" ]; then
-  echo "[ERROR] No EFI partition"
-  exit 0
-fi
+# Find ESP
+ESP=$(lsblk -rpno NAME,PARTTYPE | grep c12a7328 | cut -d' ' -f1 | head -n1)
+
+[ -z "$ESP" ] && exit 0
 
 mkdir -p /boot/efi
-mount "$EFI_PART" /boot/efi || true
+mount "$ESP" /boot/efi || true
 
-# Install GRUB anyway
+# Install GRUB properly
 grub-install \
   --target=x86_64-efi \
   --efi-directory=/boot/efi \
   --bootloader-id=SavarezOS \
-  --recheck || true
+  --recheck
 
-update-grub || true
+update-grub
+
+# Fallback
+mkdir -p /boot/efi/EFI/BOOT
+
+cp /boot/efi/EFI/SavarezOS/grubx64.efi \
+   /boot/efi/EFI/BOOT/BOOTX64.EFI || true
 
 sync
 
-echo "[SavarezOS] GRUB forced install done"
+echo "[SavarezOS] Bootloader done"
