@@ -3,20 +3,10 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-# Remove Debian installer only
+# Remove Debian installer
 rm -f /usr/share/applications/*debian*.desktop || true
 
-# Detect live user properly
-LIVEUSER=$(getent passwd | grep '/home/' | cut -d: -f1 | head -n1)
-
-# Fallback
-[ -z "$LIVEUSER" ] && LIVEUSER=live
-
-# Prepare dirs
-mkdir -p /etc/skel/Desktop
-mkdir -p /home/$LIVEUSER/Desktop || true
-
-# Create launcher
+# Create system-wide launcher
 cat > /usr/share/applications/install-savarezos.desktop <<EOF
 [Desktop Entry]
 Type=Application
@@ -29,20 +19,15 @@ EOF
 
 chmod 755 /usr/share/applications/install-savarezos.desktop
 
-# Copy to skel
-cp /usr/share/applications/install-savarezos.desktop \
-   /etc/skel/Desktop/Install-SavarezOS.desktop
+# Autostart copy to Desktop when session starts
+mkdir -p /etc/xdg/autostart
 
-chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
-
-# Copy to live user
-cp /etc/skel/Desktop/Install-SavarezOS.desktop \
-   /home/$LIVEUSER/Desktop/ || true
-
-chmod +x /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop || true
-chown $LIVEUSER:$LIVEUSER \
-  /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop || true
-
-update-desktop-database || true
+cat > /etc/xdg/autostart/savarez-installer.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=Savarez Installer Shortcut
+Exec=/bin/bash -c "cp -n /usr/share/applications/install-savarezos.desktop \$HOME/Desktop/Install-SavarezOS.desktop && chmod +x \$HOME/Desktop/Install-SavarezOS.desktop"
+X-GNOME-Autostart-enabled=true
+EOF
 
 echo "[SavarezOS] Live hook done"

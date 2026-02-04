@@ -1,5 +1,7 @@
 #!/bin/bash
 set -e
 
-rm -f /usr/share/applications/install-savarezos.desktop
+# Remove installer shortcut after install
+rm -f /usr/share/applications/install-savarezos.desktop || true
 rm -f /home/*/Desktop/Install-SavarezOS.desktop || true
+rm -f /etc/skel/Desktop/Install-SavarezOS.desktop || true
