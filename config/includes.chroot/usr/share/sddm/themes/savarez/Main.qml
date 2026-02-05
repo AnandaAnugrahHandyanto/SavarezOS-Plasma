@@ -4,14 +4,15 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.12
+import QtQuick 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.12
 import QtQuick.Controls 2.12
-import QtGraphicalEffects 1.12
 
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.private.keyboardindicator as KeyboardIndicator
-import org.kde.kirigami 2.9
+import org.kde.kirigami 2.20 as Kirigami
 
 Item {
     id: root
@@ -108,25 +109,6 @@ Item {
             mainStack: mainStack
             footer: footer
             clock: clock
-        }
-
-        DropShadow {
-            id: clockShadow
-            anchors.fill: clock
-            source: clock
-            visible: !softwareRendering && config.showClock === "true"
-            radius: 7
-            verticalOffset: 0.8
-            samples: 15
-            spread: 0.2
-            color : Qt.rgba(0, 0, 0, 0.7)
-            opacity: loginScreenRoot.uiVisible ? 0 : 1
-            Behavior on opacity {
-                OpacityAnimator {
-                    duration: Kirigami.Units.veryLongDuration * 2
-                    easing.type: Easing.InOutQuad
-                }
-            }
         }
 
         Clock {
@@ -374,27 +356,6 @@ Item {
                         onClicked: mainStack.pop()
                     }
                 ]
-            }
-        }
-
-        DropShadow {
-            id: logoShadow
-            anchors.fill: logo
-            source: logo
-            visible: !softwareRendering && config.showlogo === "shown"
-            horizontalOffset: 1
-            verticalOffset: 1
-            radius: 6
-            samples: 14
-            spread: 0.3
-            color : "black" // shadows should always be black
-            opacity: loginScreenRoot.uiVisible ? 0 : 1
-            Behavior on opacity {
-                //OpacityAnimator when starting from 0 is buggy (it shows one frame with opacity 1)"
-                NumberAnimation {
-                    duration: Kirigami.Units.longDuration
-                    easing.type: Easing.InOutQuad
-                }
             }
         }
 
