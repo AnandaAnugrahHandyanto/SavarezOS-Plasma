@@ -3,10 +3,13 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-# Prepare skeleton desktop
+LIVEUSER=$(getent passwd 1000 | cut -d: -f1)
+
+[ -z "$LIVEUSER" ] && exit 0
+
+mkdir -p /home/$LIVEUSER/Desktop
 mkdir -p /etc/skel/Desktop
 
-# Create installer desktop entry
 cat > /usr/share/applications/install-savarezos.desktop <<EOF
 [Desktop Entry]
 Type=Application
@@ -19,10 +22,12 @@ EOF
 
 chmod 755 /usr/share/applications/install-savarezos.desktop
 
-# Copy to skel
 cp /usr/share/applications/install-savarezos.desktop \
-   /etc/skel/Desktop/Install-SavarezOS.desktop
+   /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
 
-chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
+chmod +x /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
+
+chown $LIVEUSER:$LIVEUSER \
+  /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
 
 echo "[SavarezOS] Live hook done"
