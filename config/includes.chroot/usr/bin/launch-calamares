@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Allow root to connect to X display
+# Allow local user root access to X server for GUI installer
 xhost +si:localuser:root
 
-# Run Calamares with sudo and preserve env
-sudo -E calamares
+# Run Calamares via pkexec
+pkexec calamares
