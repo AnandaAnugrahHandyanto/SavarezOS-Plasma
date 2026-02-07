@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+# Set ownership and permissions for the theme
+chown -R root:root /usr/share/sddm/themes/savarez
+chmod -R 755 /usr/share/sddm/themes/savarez
+
+# Ensure background directory is readable
+chmod 755 /usr/share/backgrounds/savarez
+chmod 644 /usr/share/backgrounds/savarez/login.png
