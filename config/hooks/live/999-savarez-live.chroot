@@ -3,11 +3,17 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-LIVEUSER=$(logname 2>/dev/null || echo live)
+# Detect live user automatically
+LIVEUSER=$(getent passwd | awk -F: '$3>=1000 {print $1; exit}')
 
-[ -z "$LIVEUSER" ] && LIVEUSER=live
+if [ -z "$LIVEUSER" ]; then
+    echo "[SavarezOS] No live user found, skipping"
+    exit 0
+fi
 
-mkdir -p /home/$LIVEUSER/Desktop
+DESKTOP="/home/$LIVEUSER/Desktop"
+
+mkdir -p "$DESKTOP"
 
 cat > /usr/share/applications/install-savarezos.desktop <<EOF
 [Desktop Entry]
@@ -22,9 +28,11 @@ EOF
 chmod 755 /usr/share/applications/install-savarezos.desktop
 
 cp /usr/share/applications/install-savarezos.desktop \
-   /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
+   "$DESKTOP/Install-SavarezOS.desktop"
 
-chmod +x /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
-chown $LIVEUSER:$LIVEUSER /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
+chmod +x "$DESKTOP/Install-SavarezOS.desktop"
+
+chown "$LIVEUSER:$LIVEUSER" \
+  "$DESKTOP/Install-SavarezOS.desktop"
 
 echo "[SavarezOS] Live hook done"
