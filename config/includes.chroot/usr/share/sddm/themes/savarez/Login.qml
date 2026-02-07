@@ -1,13 +1,13 @@
 import org.kde.breeze.components
 
-import QtQuick 2.11
-import QtQuick.Layouts 1.11
-import QtQuick.Controls 2.11 as QQC2
+import QtQuick 2.12
+import QtQuick.Layouts 1.12
+import QtQuick.Controls 2.12
+import QtGraphicalEffects 1.12
+import org.kde.kirigami 2.15
 
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kirigami 2.15 as Kirigami
-
 
 SessionManagementScreen {
     id: root

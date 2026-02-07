@@ -3,12 +3,11 @@ set -e
 
 echo "[SavarezOS] Live hook start"
 
-LIVEUSER=$(getent passwd 1000 | cut -d: -f1)
+LIVEUSER=$(logname 2>/dev/null || echo live)
 
-[ -z "$LIVEUSER" ] && exit 0
+[ -z "$LIVEUSER" ] && LIVEUSER=live
 
 mkdir -p /home/$LIVEUSER/Desktop
-mkdir -p /etc/skel/Desktop
 
 cat > /usr/share/applications/install-savarezos.desktop <<EOF
 [Desktop Entry]
@@ -26,8 +25,6 @@ cp /usr/share/applications/install-savarezos.desktop \
    /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
 
 chmod +x /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
-
-chown $LIVEUSER:$LIVEUSER \
-  /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
+chown $LIVEUSER:$LIVEUSER /home/$LIVEUSER/Desktop/Install-SavarezOS.desktop
 
 echo "[SavarezOS] Live hook done"

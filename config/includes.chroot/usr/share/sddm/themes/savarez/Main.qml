@@ -4,14 +4,14 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.11
-import QtQuick.Layouts 1.11
-import QtQuick.Controls 2.11
-import QtGraphicalEffects 1.0
+import QtQuick 2.12
+import QtQuick.Layouts 1.12
+import QtQuick.Controls 2.12
+import QtGraphicalEffects 1.12
+import org.kde.kirigami 2.15
 
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 import org.kde.plasma.private.keyboardindicator as KeyboardIndicator
-import org.kde.kirigami 2.15 as Kirigami
 
 Item {
     id: root
