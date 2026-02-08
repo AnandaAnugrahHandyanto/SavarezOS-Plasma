@@ -1,3 +1,5 @@
 grub-common
 os-prober
+efibootmgr
 mtools
+dosfstools

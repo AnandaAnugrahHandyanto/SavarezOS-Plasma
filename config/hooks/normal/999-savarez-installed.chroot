@@ -1,34 +1,33 @@
 #!/bin/bash
+
 set -e
 
-echo "[SavarezOS] Installed hook start"
-
-# OS identity
+# Replace OS identification with SavarezOS details
 cat > /usr/lib/os-release <<EOF
 NAME="SavarezOS"
 ID=savarezos
+ID_LIKE=debian
 PRETTY_NAME="SavarezOS GNU/Linux"
-VERSION="Beta"
-VERSION_ID="beta"
-LOGO=savarez-logo
+VERSION="1.0 (Beta)"
+VERSION_ID="1.0"
 HOME_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
+SUPPORT_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma"
+BUG_REPORT_URL="https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma/issues"
+LOGO=savarez-logo
 EOF
 
+# Create a symbolic link for system-wide recognition
 ln -sf /usr/lib/os-release /etc/os-release
 
-# LSB
+# Update LSB release information for third-party apps
 cat > /etc/lsb-release <<EOF
 DISTRIB_ID=SavarezOS
-DISTRIB_RELEASE=Beta
-DISTRIB_DESCRIPTION="SavarezOS Plasma"
+DISTRIB_RELEASE=1.0
+DISTRIB_CODENAME=savarez
+DISTRIB_DESCRIPTION="SavarezOS Plasma Edition"
 EOF
 
-# REMOVE Debian About System
-rm -rf /usr/share/kcm_about-distro/debian
-rm -rf /usr/lib/os-release.d
-rm -rf /usr/share/plasma/branding/debian
-
-# Force KDE branding
+# Override KDE About System information
 mkdir -p /etc/xdg
 cat > /etc/xdg/kcm_about-distrorc <<EOF
 [General]
@@ -36,27 +35,9 @@ Branding=savarezos
 Name=SavarezOS
 Logo=/usr/share/icons/hicolor/scalable/apps/savarez-logo.png
 Website=https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma
-Version=Beta
+Version=1.0 Beta
 Variant=Plasma
 EOF
 
-# Wallpaper
-mkdir -p /usr/share/wallpapers/SavarezOS
-cp /usr/share/savarez/savarez-wallpaper.png \
-   /usr/share/wallpapers/SavarezOS/background.png
-
-# Marker
-touch /etc/savarez-installed
-
-gtk-update-icon-cache -f /usr/share/icons/hicolor || true
-
-echo "[SavarezOS] Installed hook done"
-
-# Remove Debian branding leftovers
-rm -rf /usr/share/debian
-rm -rf /usr/share/doc/debian
-rm -rf /usr/share/icons/debian*
-rm -rf /etc/issue.net
-rm -rf /etc/motd
-
+# Update the login issue banner
 echo "SavarezOS 1.0" > /etc/issue

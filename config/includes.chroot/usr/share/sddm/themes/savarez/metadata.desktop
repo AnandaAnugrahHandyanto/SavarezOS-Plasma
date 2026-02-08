@@ -1,10 +1,10 @@
-[Appearance]
+[SddmGreeterTheme]
 Name=savarez
 Description=SavarezOS Plasma Theme
-Author=Ananda Anugrah
-Config=theme.conf
+Author=Ananda Anugrah H
 Type=sddm-theme
 Version=1.0
-Website=https://github.com/anandaanugrahhandyanto/savarezos-plasma
+Website=https://github.com/AnandaAnugrahHandyanto/SavarezOS-Plasma
 Theme-Id=savarez
 Theme-API=2.0
+QtVersion=6
