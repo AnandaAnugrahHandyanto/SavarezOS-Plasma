@@ -1,33 +1,23 @@
 #!/bin/bash
-
 set -e
 
-# Ensure target directories exist
+# Make launcher executable
+chmod +x /usr/bin/launch-calamares
+
+# Create Desktop Shortcut
 mkdir -p /etc/skel/Desktop
-mkdir -p /usr/share/icons/hicolor/scalable/apps/
-
-# Ensure the logo exists in the icon path so the .desktop file can find it
-if [ -f /usr/share/savarez/savarez-logo.png ]; then
-    cp /usr/share/savarez/savarez-logo.png /usr/share/icons/hicolor/scalable/apps/savarez-logo.png
-fi
-
-# Create the desktop entry with correct icon name and execution command
 cat > /usr/share/applications/install-savarezos.desktop <<EOF
 [Desktop Entry]
 Type=Application
 Name=Install SavarezOS
-Comment=Official Installer for SavarezOS
-Exec=sudo calamares
+Comment=Install SavarezOS to Disk
+Exec=/usr/bin/launch-calamares
 Icon=savarez-logo
 Terminal=false
 Categories=System;Installer;
-X-KDE-SubstituteUID=false
+StartupNotify=true
 EOF
 
-# Copy to skel and set permissions
+# Copy to Skel
 cp /usr/share/applications/install-savarezos.desktop /etc/skel/Desktop/Install-SavarezOS.desktop
 chmod +x /etc/skel/Desktop/Install-SavarezOS.desktop
-chmod 755 /usr/share/applications/install-savarezos.desktop
-
-# Refresh icon cache
-gtk-update-icon-cache /usr/share/icons/hicolor/ || true

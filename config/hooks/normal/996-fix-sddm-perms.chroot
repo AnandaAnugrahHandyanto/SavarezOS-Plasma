@@ -1,11 +1,19 @@
 #!/bin/bash
-
 set -e
 
-# Set ownership and permissions for the theme
+# Fix permissions for SDDM Theme
 chown -R root:root /usr/share/sddm/themes/savarez
-chmod -R 755 /usr/share/sddm/themes/savarez
+find /usr/share/sddm/themes/savarez -type d -exec chmod 755 {} \;
+find /usr/share/sddm/themes/savarez -type f -exec chmod 644 {} \;
 
-# Ensure background directory is readable
+# Fix permissions for Backgrounds
 chmod 755 /usr/share/backgrounds/savarez
-chmod 644 /usr/share/backgrounds/savarez/login.png
+chmod 644 /usr/share/backgrounds/savarez/*.png
+
+# Ensure SDDM config is correct
+mkdir -p /etc/sddm.conf.d
+echo "[Theme]" > /etc/sddm.conf.d/10-savarez.conf
+echo "Current=savarez" >> /etc/sddm.conf.d/10-savarez.conf
+
+# Make sure launcher is executable
+chmod +x /usr/bin/launch-calamares

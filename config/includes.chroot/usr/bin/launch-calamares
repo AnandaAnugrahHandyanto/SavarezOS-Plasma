@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Allow root to connect to X display
+xhost +si:localuser:root
+
+# Run Calamares with sudo and preserve env
+sudo -E calamares
