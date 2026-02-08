@@ -1,4 +1,6 @@
+grub-pc
 grub-efi-amd64
-shim-signed
-efibootmgr
+grub-efi-amd64-bin
+grub-common
 os-prober
+mtools
