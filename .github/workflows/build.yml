@@ -2,6 +2,7 @@ name: Build SavarezOS
 
 on:
   push:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,7 +21,10 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get update
-          apt-get install -y live-build debootstrap squashfs-tools xorriso debian-archive-keyring zip
+          apt-get install -y live-build debootstrap squashfs-tools xorriso debian-archive-keyring zip curl git
+
+      - name: Fix Git Config
+        run: git config --global --add safe.directory "*"
 
       - name: Configure live-build
         run: |
@@ -70,3 +74,21 @@ jobs:
         with:
           name: SavarezOS-ISO
           path: "*.iso"
+      
+      - name: Notify Telegram (Success)
+        if: success()
+        run: |
+          SHORT_SHA=$(git rev-parse --short HEAD)
+          
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d parse_mode="Markdown" \
+          -d text="✅ *SavarezOS Build Success!* %0A%0A🚀 *Version:* Alpha v${{ github.run_number }}%0A🔗 *Commit:* [$SHORT_SHA](https://github.com/${{ github.repository }}/commit/${{ github.sha }})%0A📝 *Note:* Release created successfully."
+
+      - name: Notify Telegram (Failure)
+        if: failure()
+        run: |
+          curl -s -X POST https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage \
+          -d chat_id=${{ secrets.TELEGRAM_CHAT_ID }} \
+          -d parse_mode="Markdown" \
+          -d text="❌ *SavarezOS Build Failed!* %0A%0A⚠️ Build error detected.%0A🔍 [Check Logs](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})"
