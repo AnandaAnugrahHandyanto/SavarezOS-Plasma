@@ -1,5 +1,10 @@
-GRUB_DISTRIBUTOR="SavarezOS"
+# SavarezOS GRUB Configuration
+GRUB_DEFAULT=0
 GRUB_TIMEOUT=5
-GRUB_THEME="/boot/grub/themes/SavarezOS/theme.txt"
+GRUB_DISTRIBUTOR="Savarezos Linux"
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"
 GRUB_CMDLINE_LINUX=""
+GRUB_GFXMODE=1920x1080
+GRUB_THEME="/usr/share/grub/themes/SavarezOS/theme.txt"
+GRUB_BACKGROUND="/usr/share/backgrounds/savarez/grub.png"
+GRUB_DISABLE_OS_PROBER=false
