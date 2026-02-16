@@ -1,0 +1,19 @@
+#!/bin/sh
+
+echo "Overwriting Boot Menu Branding..."
+
+# Update .disk/info (Used by GRUB/Syslinux for generic branding)
+echo "Savarezos Linux" > .disk/info
+
+# Force replace in Isolinux (BIOS Boot)
+if [ -d "isolinux" ]; then
+    find isolinux/ -name "*.cfg" -exec sed -i 's/Debian GNU\/Linux.*/Savarezos Linux/g' {} +
+    find isolinux/ -name "*.cfg" -exec sed -i 's/Debian.*/Savarezos Linux/g' {} +
+fi
+
+# Force replace in GRUB (EFI Boot)
+if [ -d "boot/grub" ]; then
+    find boot/grub/ -name "*.cfg" -exec sed -i 's/Debian GNU\/Linux/Savarezos Linux/g' {} +
+fi
+
+echo "Branding Applied Successfully."
