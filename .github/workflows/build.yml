@@ -30,6 +30,10 @@ jobs:
         run: |
           lb clean --purge || true
           rm -rf .build cache chroot binary auto || true
+
+          chmod -R +x config/hooks/
+          chmod -R +x config/includes.chroot/usr/bin/ || true
+          
           lb config \
             --mode debian \
             --distribution bookworm \
