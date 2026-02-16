@@ -1,5 +1,9 @@
+# Bootloader Packages (Pre-installed)
 grub-common
+grub2-common
+grub-pc-bin
+grub-efi-amd64-bin
 os-prober
 efibootmgr
-mtools
 dosfstools
+mtools
