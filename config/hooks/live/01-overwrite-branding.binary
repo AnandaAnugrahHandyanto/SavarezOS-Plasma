@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Overwrite Debian branding in .disk/info
+echo "Savarezos Linux" > .disk/info
+
+# Force replace in isolinux configs if they exist in the binary tree
+if [ -d "isolinux" ]; then
+    sed -i 's/Debian GNU\/Linux.*/Savarezos Linux/g' isolinux/menu.cfg
+    sed -i 's/Debian.*/Savarezos Linux/g' isolinux/stdmenu.cfg
+fi
+
+# Force replace in GRUB configs if they exist
+if [ -d "boot/grub" ]; then
+    sed -i 's/Debian GNU\/Linux/Savarezos Linux/g' boot/grub/grub.cfg
+fi
