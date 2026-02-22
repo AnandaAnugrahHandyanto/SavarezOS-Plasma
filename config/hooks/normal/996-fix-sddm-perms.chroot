@@ -15,5 +15,6 @@ mkdir -p /etc/sddm.conf.d
 echo "[Theme]" > /etc/sddm.conf.d/10-savarez.conf
 echo "Current=savarez" >> /etc/sddm.conf.d/10-savarez.conf
 
-# Make launcher executable
+# Fix launcher and wrapper permissions
 chmod +x /usr/bin/launch-calamares
+chmod +x /usr/bin/calamares-grub-install

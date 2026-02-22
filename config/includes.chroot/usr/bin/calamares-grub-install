@@ -1,0 +1,33 @@
+#!/bin/bash
+declare -a ARGS
+skip_next=0
+is_efi=0
+
+for arg in "$@"; do
+    # Skip argument if it is the value of --bootloader-id
+    if [ $skip_next -eq 1 ]; then
+        skip_next=0
+        continue
+    fi
+    
+    if [[ "$arg" == *efi* ]]; then
+        is_efi=1
+    fi
+    
+    if [[ "$arg" == --bootloader-id=* ]]; then
+        continue
+    elif [[ "$arg" == "--bootloader-id" ]]; then
+        skip_next=1
+        continue
+    fi
+    
+    ARGS+=("$arg")
+done
+
+if [ $is_efi -eq 1 ]; then
+    echo "Installing GRUB in EFI Removable Mode to prevent NVRAM error..."
+    /usr/sbin/grub-install "${ARGS[@]}" --removable --no-nvram
+else
+    echo "Installing GRUB in BIOS/Legacy Mode..."
+    /usr/sbin/grub-install "${ARGS[@]}"
+fi
